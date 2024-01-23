@@ -1,5 +1,5 @@
 <div class="container">
-  <nav class="navbar navbar-expand-lg sticky-top">
+  <nav class="navbar navbar-expand-lg sticky-top" *ngIf="xacthuc.isLogIn">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Navbar</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -9,10 +9,10 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link"><i class="fa-solid fa-bars" (click)="open(content)"></i></a>
+            <a class="nav-link"><i class="fa-solid fa-bars"  (click)="open(content)"></i></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/trang-chu" routerLinkActive="disabled">Home</a>
+          <li class="nav-item" >
+            <a class="nav-link active" aria-current="page" routerLink="/trang-chu" routerLinkActive="disabled" >Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Features</a>
@@ -33,8 +33,8 @@
         <span class="input-icon"><i class="fa-solid fa-magnifying-glass" style="color: black;"></i></span>
         
       </form>
-      <i class="fa-solid fa-cart-shopping" routerLink="chi-tiet-hoa-don"><span class="badge bg-secondary">{{number}}</span></i>
-      <!-- <button style="margin-left: 40px;" type="submit" class="btn btn-outline-success" routerLink="dang-nhap">Login</button> -->
+      <i class="fa-solid fa-cart-shopping" style="cursor: pointer;" routerLink="chi-tiet-hoa-don"><span class="badge bg-secondary">{{number}}</span></i>
+      <button style="margin-left: 40px;" type="submit" class="btn btn-outline-success" (click)="logout()">Đăng xuất</button>
     </div>
   </nav>
   <ng-template #content let-offcanvas>

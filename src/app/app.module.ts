@@ -21,6 +21,7 @@ import { QuanLyHoaDonComponent } from './quan-ly-hoa-don/quan-ly-hoa-don.compone
 import { QuanLyChiNhanhComponent } from './quan-ly-chi-nhanh/quan-ly-chi-nhanh.component';
 import { QuanLyNhaCungCapComponent } from './quan-ly-nha-cung-cap/quan-ly-nha-cung-cap.component';
 import { QuanLyChiTieuComponent } from './quan-ly-chi-tieu/quan-ly-chi-tieu.component';
+import { ChanTruyCapComponent } from './chan-truy-cap/chan-truy-cap.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +37,8 @@ import { QuanLyChiTieuComponent } from './quan-ly-chi-tieu/quan-ly-chi-tieu.comp
     QuanLyHoaDonComponent,
     QuanLyChiNhanhComponent,
     QuanLyNhaCungCapComponent,
-    QuanLyChiTieuComponent
+    QuanLyChiTieuComponent,
+    ChanTruyCapComponent
   ],
   imports: [
     BrowserModule,

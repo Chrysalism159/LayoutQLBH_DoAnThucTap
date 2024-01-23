@@ -15,7 +15,7 @@ export class DangNhapComponent {
   result: DangNhap = new DangNhap()
   login(){
     console.log(this.service.taikhoan)
-    this.service.timtaikhoantheoten(this.service.taikhoan.tenNguoiDung)
+    this.service.timtaikhoantheoten()
     .subscribe({
       next: res => {
         this.result=res as DangNhap
@@ -24,6 +24,7 @@ export class DangNhapComponent {
           sessionStorage.setItem('username',this.result.tenNguoiDung);
             sessionStorage.setItem('role',this.result.phanQuyen);
             this.router.navigate(['trang-chu']);
+            this.service.isLogIn = true
             console.log(sessionStorage)
         }
       },

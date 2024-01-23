@@ -1,8 +1,10 @@
 import { Component, inject, OnDestroy, TemplateRef } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { NgbSlideEvent, NgbOffcanvas, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { MasterService } from './service/master.service';
+import { XacThucService } from './service/xacthuc.service';
 
 
 @Component({
@@ -14,10 +16,12 @@ export class AppComponent implements OnDestroy {
 	title = 'QuanLyBanHangLayout';
 	number: number=0
 	private subscription: Subscription = new Subscription;
-
+	currentComponent: string = '';
+	role!: boolean
 	isTrangChuVisible: boolean = true;
+	isEnable=true
 
-	constructor(private router: Router, private master: MasterService) {
+	constructor(private router: Router, private master: MasterService, public xacthuc: XacThucService) {
 		// Lắng nghe sự kiện NavigationStart để kiểm soát hiển thị component
 		this.router.events.subscribe((event) => {
 			if (event instanceof NavigationStart) {
@@ -29,7 +33,29 @@ export class AppComponent implements OnDestroy {
 				});
 			}
 		});
+		this.router.events.pipe(
+			filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    		).subscribe((event: NavigationEnd) => {
+			this.currentComponent = this.extractComponentNameFromUrl(event.url);
+			console.log("Component:",this.currentComponent)
+			this.role = xacthuc.isLogIn
+		  console.log("Role:",this.role)
+		  });
+
+		  
 	}
+	logout()
+	{
+		this.router.navigate(['']);
+		this.xacthuc.isLogIn=false
+	}
+
+
+  private extractComponentNameFromUrl(url: string): string {
+    // Phân tích URL để lấy tên component (điều này phụ thuộc vào cấu trúc URL của ứng dụng bạn)
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+  }
 	ngOnDestroy(): void {
 		this.subscription.unsubscribe();
 	}
