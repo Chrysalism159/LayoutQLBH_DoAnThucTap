@@ -1,0 +1,266 @@
+<div class="container">
+    <h3 class="text-lg-center">Danh sách nhân viên</h3>
+    <table class="table table-bordered">
+        <thead>
+
+            <tr>
+                <td>Tên nhân viên</td>
+                <td>Số điện thoại</td>
+                <td>Ngày bắt đầu làm việc</td>
+                <td>Căn cước công dân</td>
+                <td>Ngày sinh</td>
+                <td>Giới tính</td>
+                <td>Địa chỉ</td>
+                <td>Email</td>
+                <td>Trạng thái</td>
+                <td>Ghi chú</td>
+                <td></td>
+            </tr>
+            <tr *ngFor="let c of service.dsnv" (click)="UpdateModal(c.idnhanVien)">
+                <td>{{c.tenNhanVien}}</td>
+                <td>{{c.sdt}}</td>
+                <td>{{c.ngayBatDauLamViec| date: 'dd/MM/yyyy'}}</td>
+                <td>{{c.cccd}}</td>
+                <td>{{c.ngaySinh | date: 'dd/MM/yyyy'}}</td>
+                <td *ngIf="c.gioiTinh===true">{{gioitinhNam}}</td>
+                <td *ngIf="c.gioiTinh===false">{{gioitinhNu}}</td>
+                <td>{{c.diaChi}}</td>
+                <td>{{c.email}}</td>
+                <td>{{c.trangThai}}</td>
+                <td>{{c.ghiChu}}</td>
+                <td><i class="fa-solid fa-trash-can" (click)="Delete(c.idnhanVien)"></i></td>
+            </tr>
+        </thead>
+    </table>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Thêm mới thông tin nhân viên</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <form class="row g-3" #form="ngForm" (submit)="onSubmit(form)" novalidate >
+                <div class="md-6">
+                    <label for="idtheThanhVien" class="form-label">Mã nhân viên</label>
+                    <input class="form-control" name="idsanPham" id="idnhanVien" #idnhanVien="ngModel"
+                        [(ngModel)]="guidId" (click)="generateGuid()">
+
+                </div>
+                <div class="col-md-6">
+                    <label for="tenNhanVien" class="form-label">Tên nhân viên</label>
+                    <input type="text" class="form-control" name="tenNhanVien" id="tenNhanVien" #tenNhanVien="ngModel"
+                        [(ngModel)]="service.dataNhanVien.tenNhanVien">
+                </div>
+                <div class="col-md-6">
+                    <label for="cccd" class="form-label">Số căn cước công dân</label>
+                    <input type="text" class="form-control" name="cccd" id="cccd"
+                        #cccd="ngModel" [(ngModel)]="service.dataNhanVien.cccd">
+                </div>
+                <div class="col-md-6">
+                    <label for="idchiNhanh" class="form-label">Chi nhánh</label>
+                    <select title="Chọn loại thẻ" [(ngModel)]="chiNhanhValue" name="idchiNhanh" class="form-control">
+                        <option class="form-control" *ngFor="let c of service.dsChiNhanh" [value]="c.idchiNhanh">{{ c.tenChiNhanh }}</option>
+                    </select>
+
+                </div>
+                <div class="col-md-6">
+                    <label for="idtaiKhoan" class="form-label">Tài khoản được cấp</label>
+                    <select title="Chọn loại thẻ" [(ngModel)]="TaiKhoanValue" name="idtaiKhoan" class="form-control">
+                        <option class="form-control" *ngFor="let c of service.dsTaiKhoan" [value]="c.idtaiKhoan">{{ c.tenNguoiDung }}</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="sdt" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" name="sdt" id="sdt" #sdt="ngModel"
+                        [(ngModel)]="service.dataNhanVien.sdt">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" #email="ngModel"
+                        [(ngModel)]="service.dataNhanVien.email">
+                </div>
+                <div class="col-md-6">
+                    <label for="gioiTinh" class="form-label">Giới tính</label>
+                    <select title="Giới tính" [(ngModel)]="GenderSelected" name="gioiTinh" class="form-control">
+                        <option [value]="true">Nam</option>
+                        <option [value]="false">Nữ</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="gioiTinh" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="diaChi" id="diaChi" #diaChi="ngModel"
+                        [(ngModel)]="service.dataNhanVien.diaChi">
+                </div>
+                <div class="col-md-6 input-container">
+                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="ngaySinh" [(ngModel)]="NgaySinh"  />
+                    <!-- <span><i class="fa-solid fa-calendar-days" (click)="ngaySinh.toggle()"></i></span> -->
+                </div>
+                <div class="col-md-6 input-container">
+                    <label for="ngayBatDauLamViec" class="form-label">Ngày bắt đầu làm việc</label>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="ngayBatDauLamViec" [(ngModel)]="NgayBatDaulamViec"  />
+                    <!-- <span><i class="fa-solid fa-calendar-days" (click)="ngaySinh.toggle()"></i></span> -->
+                </div>
+                
+                <div class="md-6">
+                    <label for="trangThai" class="form-label">Trạng thái làm việc</label>
+                    <input type="text" class="form-control" name="trangThai" id="trangThai"
+                        #soDiemDaSuDung="ngModel" [(ngModel)]="service.dataNhanVien.trangThai">
+                </div>
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu"
+                        #soTienDaTichLuy="ngModel" [(ngModel)]="service.dataNhanVien.ghiChu">
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark"
+                        (click)="modal.dismiss('Cross click')">Save</button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </ng-template>
+
+    <button class="btn btn-outline-dark" (click)="open(content)">Thêm thông tin nhân viên</button>
+
+    <hr />
+
+    <ng-template #del_content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title " id="modal-basic-title">Xóa thông tin nhân viên</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="mb-3">
+                    <label for="dateOfBirth">Bạn muốn xóa thông tin nhân viên này?</label>
+
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ngbAutofocus class="btn btn-danger" (click)="Del()">Xóa</button>
+        </div>
+    </ng-template>
+    <ng-template #updatemodal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Cập nhật thông tin nhân viên</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <form class="row g-3" #formUpdate="ngForm" (submit)="onUpdate(formUpdate)" novalidate autocomplete="off">
+                <div class="md-6">
+                    <label for="idnhanVien" class="form-label">Mã nhân viên</label>
+                    <input class="form-control" name="idsanPham" id="idnhanVien" #idnhanVien="ngModel"
+                        [(ngModel)]="nhanvien.idnhanVien" readonly>
+
+                </div>
+
+
+                <div class="col-md-6">
+                    <label for="idloaiThe" class="form-label">Chi nhánh</label>
+                    <select title="Chọn loại thẻ" [(ngModel)]="nhanvien.idchiNhanh" name="idchiNhanh" class="form-control">
+                        <option *ngFor="let c of service.dsChiNhanh" [value]="c.idchiNhanh">{{ c.tenChiNhanh }}</option>
+                    </select>
+
+                </div>
+                <div class="col-md-6">
+                    <label for="idtaiKhoan" class="form-label">Tên tài khoản</label>
+                    <select title="Chọn loại thẻ" [(ngModel)]="nhanvien.idtaiKhoan" name="idtaiKhoan" class="form-control">
+                        <option *ngFor="let c of service.dsTaiKhoan" [value]="c.idtaiKhoan">{{ c.tenNguoiDung }}</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="tenNhanVien" class="form-label">Tên nhân viên</label>
+                    <input type="text" class="form-control" name="tenNhanVien" id="tenNhanVien" #tenNhanVien="ngModel"
+                        [(ngModel)]="nhanvien.tenNhanVien">
+                </div>
+                <div class="col-md-6">
+                    <label for="cccd" class="form-label">Số căn cước công dân</label>
+                    <input type="text" class="form-control" name="cccd" id="cccd"
+                        #cccd="ngModel" [(ngModel)]="nhanvien.cccd">
+                </div>
+                <div class="col-md-6">
+                    <label for="sdt" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" name="sdt" id="sdt" #sdt="ngModel"
+                        [(ngModel)]="nhanvien.sdt">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" #email="ngModel"
+                        [(ngModel)]="nhanvien.email">
+                </div>
+                <div class="col-md-6">
+                    <label for="gioiTinh" class="form-label">Giới tính</label>
+                    <select title="Giới tính" [(ngModel)]="GenderSelected" name="gioiTinh" class="form-control">
+                        <option [value]="true">Nam</option>
+                        <option [value]="false">Nữ</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="diaChi" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="diaChi" id="diaChi" #diaChi="ngModel"
+                        [(ngModel)]="nhanvien.diaChi">
+                </div>
+                <div class="col-md-6 input-container">
+                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="ngaySinh" #ngaySinh="ngModel" [(ngModel)] = "NgaySinh"  required="true"/>
+                </div>
+                <div class="col-md-6 input-container">
+                    <label for="ngayBatDauLamViec" class="form-label">Ngày bắt đầu làm việc</label>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="ngayBatDauLamViec"
+                    #ngayBatDauLamViec="ngModel" [(ngModel)]="NgayBatDaulamViec"  />
+                    <!-- <span><i class="fa-solid fa-calendar-days" (click)="ngaySinh.toggle()"></i></span> -->
+                </div>
+                
+                <div class="md-6">
+                    <label for="trangThai" class="form-label">Trạng thái làm việc</label>
+                    <input type="text" class="form-control" name="trangThai" id="trangThai"
+                        #trangThai="ngModel" [(ngModel)]="nhanvien.trangThai">
+                </div>
+                
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu" #ghiChu="ngModel"
+                        [(ngModel)]="nhanvien.ghiChu">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark"
+                        (click)="modal.dismiss('Cross click')">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </ng-template>
+</div>
+
+<style>
+    .input-container {
+        position: relative;
+        /* Đặt container là relative để định vị icon tương đối so với nó */
+    }
+
+    .input-container .form-control {
+        padding-right: 30px;
+        /* Tạo không gian cho icon */
+    }
+
+    .input-container i {
+        position: absolute;
+        /* Đặt icon là absolute để nó có thể định vị tương đối so với container */
+        right: 30px;
+        /* Định vị icon gần cạnh phải của input */
+        top: 50%;
+        /* Định vị ở giữa chiều cao của input */
+        transform: translateY(-50%);
+        /* Điều chỉnh chính xác vị trí theo chiều dọc */
+        cursor: pointer;
+        /* Thêm style cursor nếu icon có tương tác */
+    }
+</style>

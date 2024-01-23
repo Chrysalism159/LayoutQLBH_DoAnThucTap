@@ -1,0 +1,164 @@
+<div class="container">
+    <h3 class="text-lg-center">Danh sách chi nhánh</h3>
+    <table class="table table-bordered">
+        <thead>
+
+            <tr>
+                <td>Tên chi nhánh</td>
+                <td>Số điện thoại</td>
+                <td>Địa chỉ</td>
+                <td>Ghi chú</td>
+                <td></td>
+            </tr>
+            <tr *ngFor="let c of service.dscn" >
+                <td (click)="UpdateModal(c.idchiNhanh)">{{c.tenChiNhanh}}</td>
+                <td (click)="UpdateModal(c.idchiNhanh)">{{c.soDienThoai}}</td>
+                <td (click)="UpdateModal(c.idchiNhanh)">{{c.diaChi}}</td>
+                <td (click)="UpdateModal(c.idchiNhanh)">{{c.ghiChu}}</td>
+                <td><i class="fa-solid fa-trash-can" (click)="Delete(c.idchiNhanh)"></i></td>
+            </tr>
+        </thead>
+    </table>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Thêm thông tin chi nhánh mới</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <form class="row g-3" #form="ngForm" (submit)="onSubmit(form)" novalidate autocomplete="off">
+                <div class="md-6">
+                    <label for="idchiNhanh" class="form-label">Mã chi nhánh</label>
+                    <input class="form-control" name="idsanPham" id="idchiNhanh" #idchiNhanh="ngModel"
+                        [(ngModel)]="guidId" readonly>
+
+                </div>
+
+
+                <div class="md-6">
+                    <label for="tenChiNhanh" class="form-label">Tên chi nhánh</label>
+                    <input class="form-control" name="tenChiNhanh" id="tenChiNhanh" #tenChiNhanh="ngModel"
+                        [(ngModel)]="service.data.tenChiNhanh">
+                </div>
+                <div class="col-md-6">
+                    <label for="soDienThoai" class="form-label">Số điện thoại</label>
+                    <input class="form-control" name="soDienThoai" id="soDienThoai" #soDienThoai="ngModel"
+                        [(ngModel)]="service.data.soDienThoai">
+                </div>
+                <div class="col-md-6">
+                    <label for="diaChi" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="diaChi" id="diaChi" #diaChi="ngModel"
+                        [(ngModel)]="service.data.diaChi">
+                </div>
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu" #ghiChu="ngModel"
+                        [(ngModel)]="service.data.ghiChu">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark"
+                        (click)="modal.dismiss('Cross click')">Save</button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </ng-template>
+
+    <button class="btn btn-outline-dark" (click)="open(content)">Thêm thông tin chi nhánh</button>
+
+    <hr />
+
+    <ng-template #del_content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title " id="modal-basic-title">Xóa thông tin chi nhánh</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="mb-3">
+                    <label for="dateOfBirth">Bạn muốn xóa thông tin chi nhánh này?</label>
+
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ngbAutofocus class="btn btn-danger" (click)="Del()">Xóa</button>
+        </div>
+    </ng-template>
+    <ng-template #updatemodal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Cập nhật thông tin chi nhánh</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <form class="row g-3" #formUpdate="ngForm" (submit)="onUpdate(formUpdate)" novalidate autocomplete="off">
+                <div class="md-6">
+                    <label for="idchiNhanh" class="form-label">Mã chi nhánh</label>
+                    <input class="form-control" name="idchiNhanh" id="idchiNhanh" #idchiNhanh="ngModel"
+                        [(ngModel)]="chinhanh.idchiNhanh" readonly>
+
+                </div>
+
+
+                <div class="md-6">
+                    <label for="tenChiNhanh" class="form-label">Tên chi nhánh</label>
+                    <input class="form-control" name="tenChiNhanh" id="tenChiNhanh" #tenChiNhanh="ngModel"
+                        [(ngModel)]="chinhanh.tenChiNhanh">
+
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="soDienThoai" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" name="soDienThoai" id="soDienThoai" #soDienThoai="ngModel"
+                        [(ngModel)]="chinhanh.soDienThoai">
+                </div>
+                <div class="col-md-6">
+                    <label for="diaChi" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="diaChi" id="diaChi" #diaChi="ngModel"
+                        [(ngModel)]="chinhanh.diaChi">
+                </div>
+                
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu" #ghiChu="ngModel"
+                        [(ngModel)]="chinhanh.ghiChu">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark"
+                        (click)="modal.dismiss('Cross click')">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </ng-template>
+</div>
+
+<style>
+    .input-container {
+        position: relative;
+        /* Đặt container là relative để định vị icon tương đối so với nó */
+    }
+
+    .input-container .form-control {
+        padding-right: 30px;
+        /* Tạo không gian cho icon */
+    }
+
+    .input-container i {
+        position: absolute;
+        /* Đặt icon là absolute để nó có thể định vị tương đối so với container */
+        right: 30px;
+        /* Định vị icon gần cạnh phải của input */
+        top: 50%;
+        /* Định vị ở giữa chiều cao của input */
+        transform: translateY(-50%);
+        /* Điều chỉnh chính xác vị trí theo chiều dọc */
+        cursor: pointer;
+        /* Thêm style cursor nếu icon có tương tác */
+    }
+</style>

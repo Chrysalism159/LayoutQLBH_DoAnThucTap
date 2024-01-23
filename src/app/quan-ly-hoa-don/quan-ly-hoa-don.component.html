@@ -1,0 +1,187 @@
+<div class="container">
+    <h3 class="text-lg-center">Danh sách hóa đơn</h3>
+    <table class="table table-bordered">
+        <thead>
+
+            <tr>
+                <td>Mã hóa đơn</td>
+                <td>Tên chi nhánh</td>
+                <td>Nhân viên lập hóa đơn</td>
+                <td>Tên khách hàng</td>
+                <td>Ngày tạo hóa đơn</td>
+                <td>Số tiền thanh toán</td>
+                <td>Tổng tiền sau chiết khấu</td>
+                <td>Ghi chú</td>
+                <td></td>
+            </tr>
+            <tr *ngFor="let c of service.dshd">
+                <td (click)="UpdateModal(c.idhoaDon)">{{c.idhoaDon}}</td>
+                <td (click)="UpdateModal(c.idhoaDon)">
+                    <ng-container *ngFor="let d of cn.dscn">
+                        <ng-container *ngIf="c.idchiNhanh === d.idchiNhanh">
+                            {{d.tenChiNhanh}}
+                        </ng-container>
+                    </ng-container>
+                </td>
+                <td (click)="UpdateModal(c.idhoaDon)">
+                    <ng-container *ngFor="let d of nv.dsnv">
+                        <ng-container *ngIf="c.idnhanVien === d.idnhanVien">
+                            {{d.tenNhanVien}}
+                        </ng-container>
+                    </ng-container>
+                </td>
+                <td (click)="UpdateModal(c.idhoaDon)">
+                    <ng-container *ngFor="let d of kh.dskh">
+                        <ng-container *ngIf="c.idtheThanhVien === d.idtheThanhVien">
+                            {{d.tenKhachHang}}
+                        </ng-container>
+                    </ng-container>
+                </td>
+                <td (click)="UpdateModal(c.idhoaDon)">{{c.ngayLapHoaDon| date: 'dd/MM/yyyy'}}</td>
+                <td (click)="UpdateModal(c.idhoaDon)">{{c.soTienKhachTra}}</td>
+                <td (click)="UpdateModal(c.idhoaDon)">{{c.tongTienSauChietKhau}}</td>
+                <td (click)="UpdateModal(c.idhoaDon)">{{c.ghiChu}}</td>
+                <td><i class="fa-solid fa-trash-can" (click)="Delete(c.idhoaDon)"></i></td>
+            </tr>
+        </thead>
+    </table>
+    <!-- <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Thêm thông tin chi nhánh mới</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <form class="row g-3" #form="ngForm" (submit)="onSubmit(form)" novalidate autocomplete="off">
+                <div class="md-6">
+                    <label for="idtheThanhVien" class="form-label">Mã chi nhánh</label>
+                    <input class="form-control" name="idsanPham" id="idtheThanhVien" #idtheThanhVien="ngModel"
+                        [(ngModel)]="guidId" readonly>
+
+                </div>
+
+
+                <div class="md-6">
+                    <label for="idloaiThe" class="form-label">Tên chi nhánh</label>
+                    <input class="form-control" name="tenKhachHang" id="tenKhachHang" #tenKhachHang="ngModel"
+                        [(ngModel)]="service.data.tenChiNhanh">
+                </div>
+                <div class="col-md-6">
+                    <label for="tenKhachHang" class="form-label">Số điện thoại</label>
+                    <input class="form-control" name="tenKhachHang" id="tenKhachHang" #tenKhachHang="ngModel"
+                        [(ngModel)]="service.data.soDienThoai">
+                </div>
+                <div class="col-md-6">
+                    <label for="sdt" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="sdt" id="sdt" #sdt="ngModel"
+                        [(ngModel)]="service.data.diaChi">
+                </div>
+                <div class="md-6">
+                    <label for="email" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="email" id="email" #email="ngModel"
+                        [(ngModel)]="service.data.ghiChu">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark"
+                        (click)="modal.dismiss('Cross click')">Save</button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </ng-template> -->
+
+    <!-- <button class="btn btn-outline-dark" (click)="open(content)">Thêm thông tin chi nhánh</button> -->
+
+    <hr />
+
+    <ng-template #del_content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title " id="modal-basic-title">Xóa thông tin hóa đơn</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="mb-3">
+                    <label for="dateOfBirth">Bạn muốn xóa thông tin hóa đơn này?</label>
+
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ngbAutofocus class="btn btn-danger" (click)="Del()">Xóa</button>
+        </div>
+    </ng-template>
+    <ng-template #updatemodal let-modal style="width: 800px;">
+        <div style="width: auto;" >
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Chi tiết hóa đơn</h4>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+    
+                <table class="table table-bordered">
+                    <thead>
+    
+                        <tr>
+                            <!-- <td>Mã CTHD</td> -->
+                            <td>Tên sản phẩm</td>
+                            <td>Chiết khấu</td>
+                            <td>Số lượng</td>
+                            <td>Đơn giá</td>
+                            <td>Thành tiền</td>
+                            <td>Ghi chú</td>
+                            <!-- <td></td> -->
+                        </tr>
+                        <tr *ngFor="let c of CTHD">
+                            <!-- <td>{{c.idchiTietHoaDon}}</td> -->
+                            <td>
+                                <ng-container *ngFor="let d of sp.ds">
+                                    <ng-container *ngIf="c.idsanPham === d.idsanPham">
+                                        {{d.tenSanPham}}
+                                    </ng-container>
+                                </ng-container>
+                            </td>
+                            <td>{{c.chietKhau}} </td>
+                            <td>{{c.soLuong}}</td>
+                            <td>{{c.dongia}}</td>
+                            <td>{{c.thanhTien}}</td>
+                            <td>{{c.ghiChu}}</td>
+                            <!-- <td><i class="fa-solid fa-trash-can" (click)="Delete(c.idhoaDon)"></i></td> -->
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+
+
+    </ng-template>
+</div>
+
+<style>
+
+    .input-container {
+        position: relative;
+        /* Đặt container là relative để định vị icon tương đối so với nó */
+    }
+
+    .input-container .form-control {
+        padding-right: 30px;
+        /* Tạo không gian cho icon */
+    }
+
+    .input-container i {
+        position: absolute;
+        /* Đặt icon là absolute để nó có thể định vị tương đối so với container */
+        right: 30px;
+        /* Định vị icon gần cạnh phải của input */
+        top: 50%;
+        /* Định vị ở giữa chiều cao của input */
+        transform: translateY(-50%);
+        /* Điều chỉnh chính xác vị trí theo chiều dọc */
+        cursor: pointer;
+        /* Thêm style cursor nếu icon có tương tác */
+    }
+</style>

@@ -1,0 +1,112 @@
+<div class="container">
+  
+    <ngb-carousel *ngIf="images">
+      <ng-template ngbSlide *ngFor="let img of images">
+        <div class="picsum-img-wrapper">
+          <img style="width: 100%; height: 650px;" [src]="img" alt="Random first slide" />
+        </div>
+        <div class="carousel-caption">
+          <h3>First slide label</h3>
+          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+        </div>
+      </ng-template>
+  
+    </ngb-carousel>
+    <h2 class="text-lg-center" id="text-slogan" routerLink="chi-tiet-hoa-don">The Choice of a New Generation</h2>
+    
+    
+</div>
+<div class="container" >
+    <div class="row" >
+        <div class="col-md-4" *ngFor="let c of service.ds">
+            <div class="card" id="san-pham" style="width: 300px; height: 200px;" >
+                <ng-container *ngFor="let d of service.img_ds">
+                    <td *ngIf="d.idanh == c.idanh">
+                        <img [src]="imgurl + d.fileAnh" class="card-img-top" style="width: 300px; height: 200px;">
+                    </td>
+                </ng-container>
+                
+                <div class="card-body">
+                  <h5 class="card-title" id="ten-san-pham">{{c.tenSanPham}}</h5>
+                  <p class="card-text">Giá tiền: {{c.giaBan}}VNĐ</p>
+                  <a class="btn btn-outline-primary" (click)="chitiethinhanh(c.idsanPham)">Xem thông tin sản phẩm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #content let-modal class="card" id="san-pham" style="width: fit-content;">
+	<div class="card" id="san-pham" style="width: fit-content; height: fit-content;" >
+        <ng-container *ngFor="let d of service.img_ds">
+            <td *ngIf="d.idanh == sanpham.idanh">
+                <img [src]="imgurl + d.fileAnh" class="card-img-top">
+            </td>
+        </ng-container>
+        
+        <div class="card-body">
+          <h5 class="card-title" id="ten-san-pham">Tên sản phẩm: {{sanpham.tenSanPham}}</h5>
+          <h5 class="card-title" id="ten-san-pham">Giá bán: {{sanpham.giaBan}}</h5>
+          <h5 class="card-title" id="ten-san-pham">Ghi chú: {{sanpham.ghiChu}}</h5>
+        </div>
+    </div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="themvaogiohang(sanpham.idsanPham)" >Mua hàng</button>
+	</div>
+</ng-template>
+
+  <style>
+    nav .navbar .navbar-expand-lg .bg-body-tertiary , input .form-control{
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+    }
+  
+    .form-inline {
+      display: flex;
+      align-items: center;
+      position: relative;
+  
+      /* Đảm bảo các items cùng cao */
+    }
+  
+    .form-control {
+      flex-grow: 1;
+      /* Cho phép input mở rộng để chiếm đầy không gian còn lại */
+      margin-right: 8px;
+      /* Tạo khoảng cách giữa input và button */
+    }
+  
+    .btn {
+      flex-shrink: 0;
+      /* Ngăn button co lại */
+    }
+  
+  
+  .input-icon {
+    position: absolute;
+    right: 10px; /* Điều chỉnh khoảng cách từ cạnh phải của input */
+    color: #aaa; /* Màu sắc của icon, điều chỉnh theo ý bạn */
+  }
+  
+  .input-icon i {
+    font-size: 1rem; /* Điều chỉnh kích thước icon */
+  }
+  #text-slogan {
+    font-size: 40px; /* Set the font size */
+    font-family: 'Poiret One', cursive; /* Set the font family */
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-weight: 800;
+    color: black ;
+  }
+  #san-pham{
+    background: transparent;
+    border: none;
+    height: 370px;
+  }
+  #ten-san-pham{
+    font-family: 'Inconsolata', monospace;
+    font-size: 20px;
+
+  }
+  </style>
+

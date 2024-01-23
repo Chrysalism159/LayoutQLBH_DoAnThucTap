@@ -1,0 +1,226 @@
+
+<div class="container">
+    <h3 class="text-lg-center">Danh sách sản phẩm</h3>
+    <table class="table table-bordered" id="bang-san-pham">
+        <thead>
+
+            <tr>
+                <td>Tên sản phẩm</td>
+                <td>Hình ảnh</td>
+                <td>Giá bán</td>
+                <td>Đơn vị</td>
+                <td>Số lượng hiện có</td>
+                <td>Ghi chú</td>
+                <td></td>
+            </tr>
+            <tr *ngFor="let c of service.ds" (click)="UpdateModal(c.idsanPham)">
+                <td>{{c.tenSanPham}}</td>
+                <ng-container *ngFor="let d of service.img_ds">
+                    <td *ngIf="d.idanh == c.idanh">
+                        <img [src]="imgurl + d.fileAnh" class="card-img-top" style="width: 300px;" >
+                    </td>
+                </ng-container>
+
+                <td>{{c.giaBan}}</td>
+                <td>{{c.donVi}}</td>
+                <td>{{c.soLuongHienCo}}</td>
+                <td>{{c.ghiChu}}</td>
+                <td><i class="fa-solid fa-trash-can" (click)="Delete(c.idsanPham)"></i></td>
+            </tr>
+        </thead>
+    </table>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Thêm mới sản phẩm</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form class="row g-3" [formGroup]="formgr" (submit)="checkImg()" [class.submitted]="service.formSubmitted"
+                novalidate autocomplete="off">
+                <div class="col-md-6">
+                    <label for="idanh" class="form-label">Mã hình ảnh</label>
+                    <input class="form-control" name="idanh" id="idanh" formControlName="idanh">
+
+                </div>
+                <div class="col-md-6">
+                    <label for="file" class="form-label">Hình ảnh</label>
+                    <input type="file" class="form-control" name="file" id="file" formControlName="file" (change)="onFileSelected($event)">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark" (click)="enableBtnSave()">Kiểm tra hình ảnh</button>
+                </div>
+            </form>
+            <form class="row g-3" #form="ngForm" (submit)="onSubmit(form)" novalidate autocomplete="off">
+                <div class="md-6">
+                    <label for="idsanPham" class="form-label">Mã sản phẩm</label>
+                    <input class="form-control" name="idsanPham" id="idsanPham" #idsanPham="ngModel"
+                        [(ngModel)]="guidsp" (click)="generateGuid()">
+
+                </div>
+                <div class="md-6">
+                    <label for="idanh" class="form-label">Mã hình ảnh</label>
+                    <input class="form-control" name="idanh" id="idanh" #idanh="ngModel" [(ngModel)]="guidha">
+
+                </div>
+                <div class="md-6">
+                    <label for="tenSanPham" class="form-label">Tên sản phẩm</label>
+                    <input class="form-control" name="tenSanPham" id="tenSanPham" #tenSanPham="ngModel"
+                        [(ngModel)]="sanpham.tenSanPham">
+                </div>
+                <div class="col-md-6">
+                    <label for="giaBan" class="form-label">Giá bán</label>
+                    <input type="text" class="form-control" name="giaBan" id="giaBan" #giaBan="ngModel"
+                        [(ngModel)]="sanpham.giaBan">
+                </div>
+                <div class="col-md-6">
+                    <label for="giaVon" class="form-label">Giá vốn</label>
+                    <input type="text" class="form-control" name="giaVon" id="giaVon" #giaVon="ngModel"
+                        [(ngModel)]="sanpham.giaVon">
+                </div>
+                <div class="col-md-6">
+                    <label for="donVi" class="form-label">Đơn vị</label>
+                    <input type="text" class="form-control" name="donVi" id="donVi" #donVi="ngModel"
+                        [(ngModel)]="sanpham.donVi">
+                </div>
+                <div class="col-md-6">
+                    <label for="soLuongHienCo" class="form-label">Số lượng hiện có</label>
+                    <input type="text" class="form-control" name="soLuongHienCo" id="soLuongHienCo"
+                        #soLuongHienCo="ngModel" [(ngModel)]="sanpham.soLuongHienCo">
+                </div>
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu" #ghiChu="ngModel"
+                        [(ngModel)]="sanpham.ghiChu">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark" (click)="modal.dismiss('Cross click')" [disabled]="!isBtnEnable">Save</button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </ng-template>
+
+    <button class="btn btn-outline-dark" (click)="open(content)">Thêm sản phẩm</button>
+
+    <hr />
+
+    <ng-template #del_content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Xóa sản phẩm</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="mb-3">
+                    <label for="dateOfBirth">Bạn muốn xóa sản phẩm này?</label>
+                    
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ngbAutofocus class="btn btn-danger"
+        (click)="Del()">Xóa</button>
+        </div>
+    </ng-template>
+    <!-- modal sua thong tin san pham -->
+    <ng-template #updatedata let-modal >
+        <!-- <div class="card" id="san-pham" style="width: 300px;" >
+            <ng-container *ngFor="let d of service.img_ds">
+                <td *ngIf="d.idanh == sanpham.idanh">
+                    <img [src]="imgurl + d.fileAnh" class="card-img-top">
+                </td>
+            </ng-container> -->
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="modal-basic-title">Cập nhật thông tin sản phẩm</h4>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3" [formGroup]="formUpdate" (submit)="UpdateImg()">
+                <div class="col-md-6">
+                    <label for="idanh" class="form-label">Mã hình ảnh</label>
+                    <input class="form-control" name="idanh" id="idanh" formControlName="idanh" [(ngModel)]="sanpham.idanh">
+
+                </div>
+                <div class="col-md-6">
+                    <label for="file" class="form-label">Hình ảnh</label>
+                    <input type="file" class="form-control" name="file" id="file" formControlName="file" [(ngModel)]="hinhanh" (change)="onFileSelected($event)">
+                </div>
+                <div class="col-md-6" id="san-pham" style="width: 300px;" >
+                    <label class="form-label">Hình ảnh cũ</label>
+                    <ng-container *ngFor="let d of service.img_ds">
+                        <td *ngIf="d.idanh == sanpham.idanh">
+                            <img [src]="imgurl + d.fileAnh" class="card-img-top">
+                        </td>
+                    </ng-container>
+                </div>
+                <div class="col-md-6" id="san-pham" style="width: 300px;" >
+                    <label class="form-label">Hình ảnh mới</label>
+                            <img [src]="imgSPmoi" class="card-img-top">
+                        
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark" (click)="enableBtnSave()">Cập nhật hình ảnh</button>
+                </div>
+            </form>
+            <form class="row g-3" #form="ngForm" (submit)="onUpdateSubmit(form)" novalidate autocomplete="off">
+                <div class="md-6">
+                    <label for="idsanPham" class="form-label">Mã sản phẩm</label>
+                    <input class="form-control" name="idsanPham" id="idsanPham" #idsanPham="ngModel"
+                        [(ngModel)]="sanpham.idsanPham" readonly>
+
+                </div>
+                <div class="md-6">
+                    <label for="idanh" class="form-label">Mã hình ảnh</label>
+                    <input class="form-control" name="idanh" id="idanh" #idanh="ngModel" [(ngModel)]="sanpham.idanh" readonly>
+
+                </div>
+                <div class="md-6">
+                    <label for="tenSanPham" class="form-label">Tên sản phẩm</label>
+                    <input class="form-control" name="tenSanPham" id="tenSanPham" #tenSanPham="ngModel"
+                        [(ngModel)]="sanpham.tenSanPham">
+                </div>
+                <div class="col-md-6">
+                    <label for="giaBan" class="form-label">Giá bán</label>
+                    <input type="text" class="form-control" name="giaBan" id="giaBan" #giaBan="ngModel"
+                        [(ngModel)]="sanpham.giaBan">
+                </div>
+                <div class="col-md-6">
+                    <label for="giaVon" class="form-label">Giá vốn</label>
+                    <input type="text" class="form-control" name="giaVon" id="giaVon" #giaVon="ngModel"
+                        [(ngModel)]="sanpham.giaVon">
+                </div>
+                <div class="col-md-6">
+                    <label for="donVi" class="form-label">Đơn vị</label>
+                    <input type="text" class="form-control" name="donVi" id="donVi" #donVi="ngModel"
+                        [(ngModel)]="sanpham.donVi">
+                </div>
+                <div class="col-md-6">
+                    <label for="soLuongHienCo" class="form-label">Số lượng hiện có</label>
+                    <input type="text" class="form-control" name="soLuongHienCo" id="soLuongHienCo"
+                        #soLuongHienCo="ngModel" [(ngModel)]="sanpham.soLuongHienCo">
+                </div>
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu" #ghiChu="ngModel"
+                        [(ngModel)]="sanpham.ghiChu">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark" (click)="modal.dismiss('Cross click')" >Cập nhật</button>
+                </div>
+            </form>
+            </div>
+            
+        <!-- </div> -->
+        <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        </div> -->
+    </ng-template>
+</div>
+<style>
+    #bang-san-pham{
+        background: transparent;
+    }
+</style>

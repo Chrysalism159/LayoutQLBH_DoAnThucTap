@@ -1,0 +1,123 @@
+<div class="container">
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link"><i class="fa-solid fa-bars" (click)="open(content)"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/trang-chu" routerLinkActive="disabled">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          </li>
+            
+        </ul>
+        
+      </div>
+      
+      <form class="form-inline my-2 my-lg-0" style="margin-right: 50px;">
+        <input class="form-control bg-transparent border-0 mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <span class="input-icon"><i class="fa-solid fa-magnifying-glass" style="color: black;"></i></span>
+        
+      </form>
+      <i class="fa-solid fa-cart-shopping" routerLink="chi-tiet-hoa-don"><span class="badge bg-secondary">{{number}}</span></i>
+      <!-- <button style="margin-left: 40px;" type="submit" class="btn btn-outline-success" routerLink="dang-nhap">Login</button> -->
+    </div>
+  </nav>
+  <ng-template #content let-offcanvas>
+    <div class="offcanvas-header">
+      <h4 class="offcanvas-title" id="offcanvas-basic-title">Danh sách quản lý</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action" aria-current="true"
+          (click)="offcanvas.dismiss('Cross click')" routerLink="san-pham">
+          Quản lý sản phẩm
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" routerLink="tai-khoan-khach-hang"
+          (click)="offcanvas.dismiss('Cross click')">Quản lý khách hàng</button>
+          <button type="button" class="list-group-item list-group-item-action" routerLink="nhan-vien"
+          (click)="offcanvas.dismiss('Cross click')">Quản lý nhân viên</button>
+        <button type="button" class="list-group-item list-group-item-action" routerLink="hoa-don"
+          (click)="offcanvas.dismiss('Cross click')">Quản lý hóa đơn</button>
+        <button type="button" class="list-group-item list-group-item-action" routerLink="chi-nhanh"
+          (click)="offcanvas.dismiss('Cross click')">Quản lý chi nhánh</button>
+        <button type="button" class="list-group-item list-group-item-action" routerLink="nha-cung-cap"
+          (click)="offcanvas.dismiss('Cross click')">Quản lý nhà cung cấp</button>
+        <button type="button" class="list-group-item list-group-item-action" routerLink="chi-tieu"
+          (click)="offcanvas.dismiss('Cross click')">Quản lý chi tiêu</button>
+      </div>
+      <!-- <div class="text-end">
+            <button type="button" class="btn btn-outline-dark" (click)="offcanvas.close('Save click')">Save</button>
+          </div> -->
+    </div>
+  </ng-template>
+
+
+  <hr />
+
+
+</div>
+
+
+
+<style>
+  nav .navbar .navbar-expand-lg .bg-body-tertiary {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+
+  .form-inline {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    /* Đảm bảo các items cùng cao */
+  }
+
+  .form-control {
+    flex-grow: 1;
+    /* Cho phép input mở rộng để chiếm đầy không gian còn lại */
+    margin-right: 8px;
+    /* Tạo khoảng cách giữa input và button */
+  }
+
+  .btn {
+    flex-shrink: 0;
+    /* Ngăn button co lại */
+  }
+
+
+.input-icon {
+  position: absolute;
+  right: 10px; /* Điều chỉnh khoảng cách từ cạnh phải của input */
+  color: #aaa; /* Màu sắc của icon, điều chỉnh theo ý bạn */
+}
+
+.input-icon i {
+  font-size: 1rem; /* Điều chỉnh kích thước icon */
+}
+#text-slogan {
+  font-size: 40px; /* Set the font size */
+  font-family: 'Poiret One', cursive; /* Set the font family */
+  padding-top: 20px;
+  font-weight: 800;
+  color: white;
+}
+</style>
+<!-- <a class="nav-link active" aria-current="page" routerLink="/trang-chu" routerLinkActive="active">Home</a> -->
+<router-outlet></router-outlet>
