@@ -1,7 +1,5 @@
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Component, OnInit, inject, TemplateRef, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NgForm } from "@angular/forms";
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ChiTietHoaDon, GioHang, HoaDon } from '../../../model/hoadon.model';
 import { KhachHang } from '../../../model/khachhang.model';
 import { ChiNhanh } from '../../../model/chinhanh.model';

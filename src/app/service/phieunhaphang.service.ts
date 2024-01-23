@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { KhachHangService } from './khachhang.service';
-import { NhanVienService } from './nhanvien.service';
-import { ChiTietHoaDon, HoaDon } from '../../model/hoadon.model';
 import { PhieuNhapHang } from '../../model/phieuthanhtoan.model';
 @Injectable({
   providedIn: 'root'
