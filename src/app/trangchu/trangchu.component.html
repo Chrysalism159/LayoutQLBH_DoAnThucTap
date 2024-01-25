@@ -28,7 +28,7 @@
                 
                 <div class="card-body">
                   <h5 class="card-title" id="ten-san-pham">{{c.tenSanPham}}</h5>
-                  <p class="card-text">Giá tiền: {{c.giaBan}}VNĐ</p>
+                  <p class="card-text">Giá tiền: {{c.giaBan |number:'1.0-0'}}VNĐ</p>
                   <a class="btn btn-outline-primary" (click)="chitiethinhanh(c.idsanPham)">Xem thông tin sản phẩm</a>
                 </div>
             </div>
@@ -45,7 +45,7 @@
         
         <div class="card-body">
           <h5 class="card-title" id="ten-san-pham">Tên sản phẩm: {{sanpham.tenSanPham}}</h5>
-          <h5 class="card-title" id="ten-san-pham">Giá bán: {{sanpham.giaBan}}</h5>
+          <h5 class="card-title" id="ten-san-pham">Giá bán: {{sanpham.giaBan |number:'1.0-0'}}</h5>
           <h5 class="card-title" id="ten-san-pham">Ghi chú: {{sanpham.ghiChu}}</h5>
         </div>
     </div>

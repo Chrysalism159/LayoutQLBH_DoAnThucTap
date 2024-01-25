@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient , HttpHeaders} from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { DangNhap } from '../../model/taikhoan.model';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { DangNhap, TaiKhoanXacThuc } from '../../model/taikhoan.model';
+import { catchError, map, tap } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import  * as jwt_decode from 'jwt-decode';
 @Injectable({
   providedIn: 'root'
 })
 export class XacThucService {
-  constructor(private http:HttpClient){}
-  loginUrl: string = environment.apiBaseUrl + 'TaiKhoan/SignUpAsync'
+  constructor(private http:HttpClient, private jwtHelper: JwtHelperService){}
+  loginUrl: string = environment.apiBaseUrl + 'TaiKhoan'
   taikhoanUrl: string = environment.apiBaseUrl + 'TaiKhoanNhanVien/timtheoten/'
   taikhoan: DangNhap = new DangNhap()
-  isLogIn= false
+  account: TaiKhoanXacThuc=new TaiKhoanXacThuc
+ 
   
   SignInAccount(data:any)
   {
@@ -23,7 +26,7 @@ export class XacThucService {
   timtaikhoantheoten()
   {
     return this.http.get(this.taikhoanUrl + this.taikhoan.tenNguoiDung)
-    
+
   }
   getRole(): Observable<string> {
     // Assuming this.taikhoanUrl and this.taikhoan are class properties
@@ -40,4 +43,25 @@ export class XacThucService {
   getUserRole(): string | null {
     return localStorage.getItem('role');
   }
+  // dangnhap(){
+  //   this.http.post(`${this.loginUrl}/dangnhap/DangNhap`, this.account)
+  //   .subscribe((res:any)=>{
+  //     if(res.MaTrangThai === 1)
+  //     {
+  //       alert("Login Successfull")
+  //       localStorage.setItem("loginToken", res.ThongBao)
+  //       console.log(localStorage.getItem("loginToken"))
+  //     }
+  //   })
+  // }
+  getRoles(): string[] {
+    debugger
+    const token = localStorage.getItem('loginToken');
+    if (token) {
+      const decryptToken = this.jwtHelper.decodeToken(token);
+      return decryptToken['roles'] || [];
+    }
+    return [];
+  }
+  
 }

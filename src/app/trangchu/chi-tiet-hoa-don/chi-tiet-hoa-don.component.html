@@ -26,7 +26,7 @@
                                             <h5>{{c.tenSanPham}}</h5>
                                         </td>
                                         <td class="shoping__cart__price">
-                                            {{c.giaBan}}
+                                            {{c.giaBan | number:'1.0-0'}}
                                         </td>
                                         <td class="shoping__cart__quantity">
                                             <div class="quantity">
@@ -39,7 +39,7 @@
                                           </td>
                                       
                                           <td class="shoping__cart__total">
-                                            {{ c.thanhTien }}
+                                            {{ c.thanhTien |number:'1.0-0' }}
                                           </td>
                                 <td class="shoping__cart__item__close">
                                     <span class="icon_close"><i class="fa-solid fa-xmark" (click)="Remove(c.idsanPham)"></i></span>
@@ -55,9 +55,9 @@
             <div class="col-lg-6">
                 <form #form="ngForm" (submit)="CapNhatChiTietHoaDon()">
                     <div class="shoping__checkout">
-                        <h5>Phiếu nhập hàng</h5>
+                        <!-- <h5>Phiếu nhập hàng</h5>
                         <input class="form-control" name="idphieuNhapHang" id="idphieuNhapHang" #idphieuNhapHang ="ngModel"
-                            [(ngModel)]="chitiethoadon.idphieuNhapHang" style="margin-bottom: 40px;">
+                            [(ngModel)]="chitiethoadon.idphieuNhapHang" style="margin-bottom: 40px;"> -->
                         <!-- <select title="Chọn loại thẻ" (click)="MaPNHang()" [(ngModel)]="chitiethoadon.idphieuNhapHang" name="exampleSelect" class="form-control">
                             <option *ngFor="let c of pnh.dsPhieu" [value]="c.idphieuNhapHang">{{ c.tenHangNhap }}</option>
                         </select> -->
@@ -67,14 +67,7 @@
                             [(ngModel)]="chitiethoadon.chietKhau" style="margin-bottom: 40px;">
                         
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <button class="btn btn-outline-dark" id="primary-btn" [disabled]="!isCTHDEnable">Thanh toán hóa đơn</button>
-                        </div>
-                        <div class="col-lg-6">
-                            <button class="btn btn-outline-dark" id="primary-btn" (click)="InHoaDon()">In hóa đơn</button>
-                        </div>
-                    </div>
+                    
                 </form>
             </div>
             
@@ -82,9 +75,17 @@
                 <div class="shoping__checkout">
                     <h5>Thành tiền</h5>
                     <ul>
-                        <li>Tổng tiền <span>{{tongtien}}</span></li>
+                        <li>Tổng tiền <span>{{tongtien |number:'1.0-0'}}</span></li>
                     </ul>
-                    <button class="btn btn-outline-dark" id="primary-btn" (click)="open(content)" [disabled]="!isEnable">Tạo mã hóa đơn</button>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button class="btn btn-outline-dark" id="primary-btn" (click)="open(content)" [disabled]="!isEnable">Tạo mã hóa đơn</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-outline-dark" id="primary-btn" (click)="InHoaDon()">In hóa đơn</button>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -92,62 +93,65 @@
 </section>
 <div class="container">
     
-    
-    <ng-template #inhoadon let-modal>
+    <div #inhoadon>
+        <ng-template #inhoadon let-modal>
 
 
-        <div class="modal-header">
-            <h2 class="text-center">Thông tin hóa đơn</h2>
-        </div>
-        <div class="modal-body">
-                <div class="md-6">
-                    <label for="idhoaDon" class="form-label">Mã hóa đơn: {{mahd}}</label>
-                    <label for="tenKhachHang" class="form-label">Tên khách hàng :{{khachhang.tenKhachHang}}</label>
-                    <label for="sdt" class="form-label">Số điện thoại khách hàng :{{khachhang.sdt}}</label>
-                    <label for="idloaiThe" class="form-label" *ngFor="let c of cn.dsChiNhanh">
-                        <ng-container *ngIf="c.idchiNhanh === hoadon.idchiNhanh">
-                            Chi nhánh: {{c.tenChiNhanh}}
-                        </ng-container>
-                        </label>
-                    <label for="ngaylaphoadon" class="form-label">Ngày lập hóa đơn : {{ngaylaphoadon| date: 'dd/MM/yyyy'}}</label>
-                    <label for="soTienKhachTra" class="form-label">Số tiền khách trả : {{hoadon.soTienKhachTra}}</label>
-                    <label for="chietKhau" class="form-label">Chiết khấu : {{chitiethoadon.chietKhau}}</label>
-                    <label for="tenChiNhanh" class="form-label" *ngFor="let c of cn.dsnv">
-                        <ng-container *ngIf="c.idnhanVien === hoadon.idnhanVien">
-                            Nhân viên tạo hóa đơn: {{c.tenNhanVien}}
-                        </ng-container></label>
-                    <label for="ghiChu" class="form-label">Ghi chú : {{hoadon.ghiChu}}</label>
-                </div>
-                <hr>
-                <div class="d-flex justify-content-center">
-                    <h4>Danh mục sản phẩm đã mua</h4>
-                </div>
-                <table class="table table-bordered">
-                    <thead>
-            
-                        <tr>
-                            <td>Tên sản phẩm</td>
-                            <td>Số lượng</td>
-                            <td>Giá tiền</td>
-                            <td>Thành tiền</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let c of dsgiohang">
-                            <td>{{c.tenSanPham}}</td>
-                            <td>{{c.soLuong}}</td>
-                            <td>{{c.giaBan}}</td>
-                            <td>{{c.thanhTien}}</td>
-                        </tr>
-                    </tbody>
+            <div class="modal-header">
+                <h2 class="text-center">Thông tin hóa đơn</h2>
+            </div>
+            <div class="modal-body">
+                    <div class="md-6">
+                        <label for="idhoaDon" class="form-label">Mã hóa đơn: {{mahd}}</label>
+                        <label for="tenKhachHang" class="form-label">Tên khách hàng :{{khachhang.tenKhachHang}}</label>
+                        <label for="sdt" class="form-label">Số điện thoại khách hàng :{{khachhang.sdt}}</label>
+                        <label for="idloaiThe" class="form-label" *ngFor="let c of cn.dsChiNhanh">
+                            <ng-container *ngIf="c.idchiNhanh === hoadon.idchiNhanh">
+                                Chi nhánh: {{c.tenChiNhanh}}
+                            </ng-container>
+                            </label>
+                        <label for="ngaylaphoadon" class="form-label">Ngày lập hóa đơn : {{ngaylaphoadon| date: 'dd/MM/yyyy'}}</label>
+                        <label for="soTienKhachTra" class="form-label">Số tiền khách trả : {{hoadon.soTienKhachTra}}</label> <br>
+                        <label for="chietKhau" class="form-label">Chiết khấu : {{chitiethoadon.chietKhau}}</label>
+                        <label for="tenChiNhanh" class="form-label" *ngFor="let c of cn.dsnv">
+                            <ng-container *ngIf="c.idnhanVien === hoadon.idnhanVien">
+                                Nhân viên tạo hóa đơn: {{c.tenNhanVien}}
+                            </ng-container></label>
+                        <label for="ghiChu" class="form-label">Ghi chú : {{hoadon.ghiChu}}</label>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-center">
+                        <h4>Danh mục sản phẩm đã mua</h4>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                
+                            <tr>
+                                <td>Tên sản phẩm</td>
+                                <td>Số lượng</td>
+                                <td>Giá tiền</td>
+                                <td>Thành tiền</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of dsgiohang">
+                                <td>{{c.tenSanPham}}</td>
+                                <td>{{c.soLuong}}</td>
+                                <td>{{c.giaBan}}</td>
+                                <td>{{c.thanhTien}}</td>
+                            </tr>
+                        </tbody>
+                            
                         
-                    
-                </table>
-                <div class="d-flex justify-content-center">
-                    <h2>Tổng thành tiền: {{tongtien}}</h2>
-                </div>
-        </div>
-    </ng-template>
+                    </table>
+                    <div class="d-flex justify-content-center">
+                        <h2>Tổng thành tiền: {{tongtien}}</h2>
+                    </div>
+            </div>
+        </ng-template>
+    </div>
+    
+    
     <ng-template #content let-modal>
 
 
@@ -183,7 +187,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="soTienKhachTra" class="text-lg-center">Số tiền khách trả</label>
-                    <input type="text" class="form-control" name="soTienKhachTra" id="soTienKhachTra" #soTienKhachTra="ngModel"
+                    <input type="text" class="form-control" name="soTienKhachTra" [value]="tongtien" id="soTienKhachTra" #soTienKhachTra="ngModel"
                         [(ngModel)]="hoadon.soTienKhachTra" />
                 </div>
                 <div class="col-md-6">

@@ -5,8 +5,9 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxPrintModule } from 'ngx-print';
 import { DangKiTaiKhoanComponent } from './dang-ki-tai-khoan/dang-ki-tai-khoan.component';
 import { DangNhapComponent } from './dang-nhap/dang-nhap.component';
 import { TrangchuComponent } from './trangchu/trangchu.component';
@@ -22,6 +23,8 @@ import { QuanLyChiNhanhComponent } from './quan-ly-chi-nhanh/quan-ly-chi-nhanh.c
 import { QuanLyNhaCungCapComponent } from './quan-ly-nha-cung-cap/quan-ly-nha-cung-cap.component';
 import { QuanLyChiTieuComponent } from './quan-ly-chi-tieu/quan-ly-chi-tieu.component';
 import { ChanTruyCapComponent } from './chan-truy-cap/chan-truy-cap.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { MasterInterceptor } from './master.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,10 +50,26 @@ import { ChanTruyCapComponent } from './chan-truy-cap/chan-truy-cap.component';
     MaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxPrintModule,
     ToastrModule.forRoot(),
-    NgbModule, FormsModule
+    NgbModule, FormsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('access_token');
+        },
+        allowedDomains: ['example.com'],
+        disallowedRoutes: ['example.com/auth/login'],
+      },
+    }),
   ],
-  providers: [],
+  providers: [
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass:MasterInterceptor,
+      multi:true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -10,6 +10,7 @@ import { SanPham } from '../../../model/sanpham.model';
 import { SanPhamService } from '../../service/sanpham.service';
 import { NhanVienService } from '../../service/nhanvien.service';
 import { ToastrService } from 'ngx-toastr';
+import printJS from 'print-js';
 import { PhieuNhapHangService } from '../../service/phieunhaphang.service';
 
 @Component({
@@ -84,31 +85,39 @@ export class ChiTietHoaDonComponent implements OnInit {
   }
   themsanpham(id: any) {
     this.tongtien = 0
+    this.number =0 
     for (let i = 0; i < this.dsgiohang.length; i++) {
       if (this.dsgiohang[i].idsanPham == id) {
         this.dsgiohang[i].soLuong++
         this.dsgiohang[i].thanhTien = this.dsgiohang[i].giaBan * this.dsgiohang[i].soLuong
       }
       this.tongtien += this.dsgiohang[i].thanhTien
+      this.number += this.dsgiohang[i].soLuong 
     }
+    this.master.setData(this.number)
   }
   bosanpham(id: any) {
     this.tongtien = 0
+    this.number =0 
     for (let i = 0; i < this.dsgiohang.length; i++) {
-
       if (this.dsgiohang[i].idsanPham == id) {
         this.dsgiohang[i].soLuong--
         this.dsgiohang[i].thanhTien = this.dsgiohang[i].giaBan * this.dsgiohang[i].soLuong
       }
-      this.tongtien += this.dsgiohang[i].thanhTien
+      this.number += this.dsgiohang[i].soLuong 
+      this.tongtien += this.dsgiohang[i].thanhTien      
     }
+    this.master.setData(this.number)
   }
   Remove(code: any) {
+    this.number =0 
     const index = this.dsgiohang.findIndex(item => item.idsanPham === code);
     if (index !== -1) {
       this.dsgiohang.splice(index, 1);
-
-      this.number = this.dsgiohang.length
+      for (let i = 0; i < this.dsgiohang.length; i++) {
+        
+        this.number += this.dsgiohang[i].soLuong 
+      }
       this.master.setData(this.number)
     }
 
@@ -166,13 +175,17 @@ export class ChiTietHoaDonComponent implements OnInit {
       this.toastr.show("Bạn chưa cập nhật thông tin hóa đơn!")
     }
     else{
-      this.inhoadon()
+      if (this.inhoadon && this.inhoadon.nativeElement) {
+        printJS({ printable: this.inhoadon.nativeElement, type: 'html' });
+      } else {
+        console.error('Content to print is not available or not initialized.');
+      }
     }
   }
-  @ViewChild('inhoadon') child !: ElementRef
-  inhoadon() {
+  @ViewChild('inhoadon') inhoadon !: ElementRef
+  HienThihoadon() {
     this.mahd = this.master.createGuid()
-    this.modalService.open(this.child, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+    this.modalService.open(this.inhoadon, { ariaLabelledBy: 'modal-basic-title' }).result.then(
       (result) => {
         this.closeResult = `Closed with: ${result}`;
       },
@@ -181,11 +194,19 @@ export class ChiTietHoaDonComponent implements OnInit {
       },
     );
   }
+  CapNhatHoaDon()
+  {
+    for (let i = 0; i < this.dsgiohang.length; i++){
+
+    }
+  }
   TaoHoaDon() {
     this.LayMaKH()
     this.hoadon.idhoaDon = this.mahd
     this.hoadon.idtheThanhVien = this.makh
     this.hoadon.ngayLapHoaDon = this.ngaylaphoadon.toLocaleString()
+    this.hoadon.tongTienSauChietKhau = this.tongtien
+    this.hoadon.soTienKhachTra = this.tongtien
     if (this.hoadon.soTienKhachTra < this.tongtien) {
       this.toastr.error("Số tiền khách trả không đủ!")
     }
@@ -194,6 +215,7 @@ export class ChiTietHoaDonComponent implements OnInit {
       this.service.themHoaDon()
         .subscribe({
           next: res => {
+            this.CapNhatChiTietHoaDon()
             this.toastr.success("Tạo hóa đơn thành công!")
             this.isCTHDEnable = true
           }

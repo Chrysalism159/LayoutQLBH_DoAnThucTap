@@ -2,7 +2,6 @@ export class ChiTietHoaDon{
     idchiTietHoaDon: string =""
     idhoaDon: string =""
     idsanPham: string =""
-    idphieuNhapHang: string =""
     chietKhau: number = 0
     soLuong: number = 0
     dongia: number = 0

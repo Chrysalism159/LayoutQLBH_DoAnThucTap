@@ -6,3 +6,7 @@ export class DangNhap{
         phanQuyen: string = ""
         ghiChu: string = ""
 }
+export class TaiKhoanXacThuc{
+  taiKhoanEmail: string = ""
+  matKhau: string = ""
+}

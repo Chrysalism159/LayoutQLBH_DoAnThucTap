@@ -38,7 +38,6 @@ export class AppComponent implements OnDestroy {
     		).subscribe((event: NavigationEnd) => {
 			this.currentComponent = this.extractComponentNameFromUrl(event.url);
 			console.log("Component:",this.currentComponent)
-			this.role = xacthuc.isLogIn
 		  console.log("Role:",this.role)
 		  });
 
@@ -47,7 +46,6 @@ export class AppComponent implements OnDestroy {
 	logout()
 	{
 		this.router.navigate(['']);
-		this.xacthuc.isLogIn=false
 	}
 
 
