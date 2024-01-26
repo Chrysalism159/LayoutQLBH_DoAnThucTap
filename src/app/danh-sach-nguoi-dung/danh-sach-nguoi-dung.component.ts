@@ -1,10 +1,9 @@
 
 import { KhachHangService } from '../service/khachhang.service'; 
-import moment from 'moment';
-import { ModalDismissReasons, NgbModal, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Component, OnInit, inject, TemplateRef, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NgForm } from "@angular/forms";
-
+import {  FormGroup, NgForm } from "@angular/forms";
+import { format } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { MasterService } from '../service/master.service';
 import { KhachHang } from '../../model/khachhang.model';
@@ -22,6 +21,7 @@ export class DanhSachNguoiDungComponent implements OnInit {
   minDate: Date= new Date (1960, 1,1)
   maxDate: Date= new Date(2000,1,1)
   NgaySinh: Date= new Date(1960,1,1)
+  NgaySinhUpDate:Date= new Date(1960,1,1)
   id: any
   gioitinhNu:string="Nữ"
   gioitinhNam:string="Nam"
@@ -88,10 +88,8 @@ generateGuid() {
     }
     onUpdate(form:NgForm)
     {
-      console.log(this.khachhang.idtheThanhVien)
-      console.log(this.khachhang)
-      this.khachhang.ngaySinh = this.NgaySinh.toLocaleString()
-      this.service.dataKhachHang.gioiTinh = this.GenderSelected
+      this.khachhang.ngaySinh = this.NgaySinhFormat
+      this.khachhang.gioiTinh = this.GenderSelected
       this.service.dataKhachHang = this.khachhang
       console.log(this.service.dataKhachHang)
       this.service.capnhatKhachHang().subscribe({
@@ -112,11 +110,23 @@ generateGuid() {
       .subscribe({
         next: res=>{
           this.khachhang = res as KhachHang
+          this.NgaySinhUpDate = new Date(this.khachhang.ngaySinh)
+          this.GenderSelected = this.khachhang.gioiTinh
+          console.log(this.NgaySinhFormat)
         },
         error: err=>{
           console.log(err)
         }
       })
+    }
+    get NgaySinhFormat(): string {
+      // Chuyển đổi NgaySinh thành chuỗi định dạng 'yyyy-MM-dd'
+      return format(this.NgaySinhUpDate, 'yyyy-MM-dd');
+    }
+  
+    set NgaySinhFormat(value: string) {
+      // Chuyển đổi chuỗi thành đối tượng Date
+      this.NgaySinhUpDate = new Date(value);
     }
     @ViewChild('updatemodal') updateView !: ElementRef
   openUpdate() {

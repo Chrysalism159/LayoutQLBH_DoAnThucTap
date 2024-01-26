@@ -17,11 +17,11 @@
                 <td>{{c.tenSanPham}}</td>
                 <ng-container *ngFor="let d of service.img_ds">
                     <td *ngIf="d.idanh == c.idanh">
-                        <img [src]="imgurl + d.fileAnh" class="card-img-top" style="width: 300px;" >
+                        <img [src]="imgurl + d.fileAnh" class="card-img-top" style="width: 200px; height: 150px;" >
                     </td>
                 </ng-container>
 
-                <td>{{c.giaBan}}</td>
+                <td>{{c.giaBan|number:'1.0-0'}}VNĐ</td>
                 <td>{{c.donVi}}</td>
                 <td>{{c.soLuongHienCo}}</td>
                 <td>{{c.ghiChu}}</td>
@@ -39,12 +39,17 @@
                 novalidate autocomplete="off">
                 <div class="col-md-6">
                     <label for="idanh" class="form-label">Mã hình ảnh</label>
-                    <input class="form-control" name="idanh" id="idanh" formControlName="idanh">
+                    <input class="form-control" name="idanh" id="idanh" formControlName="idanh" [(ngModel)]="guidha">
 
                 </div>
                 <div class="col-md-6">
                     <label for="file" class="form-label">Hình ảnh</label>
                     <input type="file" class="form-control" name="file" id="file" formControlName="file" (change)="onFileSelected($event)">
+                </div>
+                <div class="col-md-6" id="san-pham" style="width: 300px;" >
+                    <label class="form-label">Xem trước hình ảnh</label>
+                            <img [src]="imgSPmoi" class="card-img-top">
+                        
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-dark" (click)="enableBtnSave()">Kiểm tra hình ảnh</button>

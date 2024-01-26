@@ -48,6 +48,10 @@ export class HoaDonService {
   {
     return this.http.delete(this.urlHoaDon +'/'+code)
   }
+  xoaCThoaDon(code:any)
+  {
+    return this.http.delete(this.urlCTHoaDon +'/xoathongtin/'+code)
+  }
   makhachhang(ten: any, sdt:any){
     return this.http.get(this.khachhang.urlKhachHang+'/laymakhachhang/' + ten +'/'+sdt , { params: { sdt: sdt } })
   }

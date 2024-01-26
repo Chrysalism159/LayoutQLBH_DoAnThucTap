@@ -20,7 +20,7 @@
                                                 <ng-container *ngFor="let e of sp.img_ds">
                                                     <ng-container *ngIf="c.idanh == e.idanh">
                                                             <img [src]="master.imageBaseUrl + e.fileAnh" class="card-img-top"
-                                                                style="width: 300px;">
+                                                            style="width: 200px; height: 150px;">
                                                     </ng-container>
                                                 </ng-container>
                                             <h5>{{c.tenSanPham}}</h5>
@@ -53,22 +53,7 @@
         </div>
         <div class="row">
             <div class="col-lg-6">
-                <form #form="ngForm" (submit)="CapNhatChiTietHoaDon()">
-                    <div class="shoping__checkout">
-                        <!-- <h5>Phiếu nhập hàng</h5>
-                        <input class="form-control" name="idphieuNhapHang" id="idphieuNhapHang" #idphieuNhapHang ="ngModel"
-                            [(ngModel)]="chitiethoadon.idphieuNhapHang" style="margin-bottom: 40px;"> -->
-                        <!-- <select title="Chọn loại thẻ" (click)="MaPNHang()" [(ngModel)]="chitiethoadon.idphieuNhapHang" name="exampleSelect" class="form-control">
-                            <option *ngFor="let c of pnh.dsPhieu" [value]="c.idphieuNhapHang">{{ c.tenHangNhap }}</option>
-                        </select> -->
-                            <hr>
-                        <h5>Chiết khấu</h5>
-                        <input class="form-control" name="chietKhau" id="chietKhau" #chietKhau="ngModel"
-                            [(ngModel)]="chitiethoadon.chietKhau" style="margin-bottom: 40px;">
-                        
-                    </div>
-                    
-                </form>
+                
             </div>
             
             <div class="col-lg-6">
@@ -82,7 +67,7 @@
                             <button class="btn btn-outline-dark" id="primary-btn" (click)="open(content)" [disabled]="!isEnable">Tạo mã hóa đơn</button>
                         </div>
                         <div class="col-lg-6">
-                            <button class="btn btn-outline-dark" id="primary-btn" (click)="InHoaDon()">In hóa đơn</button>
+                            <button class="btn btn-outline-dark" id="primary-btn"[openNewTab]="true" ngxPrint printSectionId="inhoadon" >In hóa đơn</button>
                         </div>
                     </div>
                     
@@ -93,31 +78,28 @@
 </section>
 <div class="container">
     
-    <div #inhoadon>
-        <ng-template #inhoadon let-modal>
-
-
+    <div #hiddenDiv style="display: none;" id="inhoadon">
             <div class="modal-header">
                 <h2 class="text-center">Thông tin hóa đơn</h2>
             </div>
             <div class="modal-body">
                     <div class="md-6">
-                        <label for="idhoaDon" class="form-label">Mã hóa đơn: {{mahd}}</label>
-                        <label for="tenKhachHang" class="form-label">Tên khách hàng :{{khachhang.tenKhachHang}}</label>
-                        <label for="sdt" class="form-label">Số điện thoại khách hàng :{{khachhang.sdt}}</label>
+                        <label for="idhoaDon" class="form-label">Mã hóa đơn: {{mahd}}</label><br>
+                        <label for="tenKhachHang" class="form-label">Tên khách hàng :{{khachhang.tenKhachHang}}</label><br>
+                        <label for="sdt" class="form-label">Số điện thoại khách hàng :{{khachhang.sdt}}</label><br>
                         <label for="idloaiThe" class="form-label" *ngFor="let c of cn.dsChiNhanh">
                             <ng-container *ngIf="c.idchiNhanh === hoadon.idchiNhanh">
                                 Chi nhánh: {{c.tenChiNhanh}}
                             </ng-container>
-                            </label>
-                        <label for="ngaylaphoadon" class="form-label">Ngày lập hóa đơn : {{ngaylaphoadon| date: 'dd/MM/yyyy'}}</label>
+                            </label><br>
+                        <label for="ngaylaphoadon" class="form-label">Ngày lập hóa đơn : {{ngaylaphoadon| date: 'dd/MM/yyyy'}}</label><br>
                         <label for="soTienKhachTra" class="form-label">Số tiền khách trả : {{hoadon.soTienKhachTra}}</label> <br>
-                        <label for="chietKhau" class="form-label">Chiết khấu : {{chitiethoadon.chietKhau}}</label>
+                        <label for="chietKhau" class="form-label">Chiết khấu : {{chitiethoadon.chietKhau}}</label><br>
                         <label for="tenChiNhanh" class="form-label" *ngFor="let c of cn.dsnv">
                             <ng-container *ngIf="c.idnhanVien === hoadon.idnhanVien">
                                 Nhân viên tạo hóa đơn: {{c.tenNhanVien}}
-                            </ng-container></label>
-                        <label for="ghiChu" class="form-label">Ghi chú : {{hoadon.ghiChu}}</label>
+                            </ng-container></label><br>
+                        <label for="ghiChu" class="form-label">Ghi chú : {{hoadon.ghiChu}}</label><br>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-center">
@@ -148,7 +130,6 @@
                         <h2>Tổng thành tiền: {{tongtien}}</h2>
                     </div>
             </div>
-        </ng-template>
     </div>
     
     
@@ -183,17 +164,17 @@
                 <div class="col-md-6">
                     <label for="ngaylaphoadon" class="text-lg-center">Ngày lập hóa đơn</label>
                     <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="dp" 
-                        [(ngModel)]="ngaylaphoadon" />
+                        [(ngModel)]="NgayLapHoaDonFormat" />
                 </div>
                 <div class="col-md-6">
                     <label for="soTienKhachTra" class="text-lg-center">Số tiền khách trả</label>
-                    <input type="text" class="form-control" name="soTienKhachTra" [value]="tongtien" id="soTienKhachTra" #soTienKhachTra="ngModel"
-                        [(ngModel)]="hoadon.soTienKhachTra" />
+                    <input type="text" class="form-control" name="soTienKhachTra" id="soTienKhachTra" #soTienKhachTra="ngModel"
+                        [(ngModel)]="tongtien" />
                 </div>
                 <div class="col-md-6">
                     <label for="chietKhau" class="text-lg-center">Chiết khấu</label>
                     <input type="text" class="form-control" name="chietKhau" id="chietKhau" #chietKhau="ngModel"
-                        [(ngModel)]="chitiethoadon.chietKhau">
+                        [(ngModel)]="chitiethoadon.chietKhau" (click)="LayMaKH()" readonly>
                 </div>
                 <div class="md-6">
                     <label for="tenChiNhanh" class="text-lg-center">Mã nhân viên tạo hóa đơn</label>

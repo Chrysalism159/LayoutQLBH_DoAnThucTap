@@ -1,5 +1,5 @@
 <div class="container">
-  <nav class="navbar navbar-expand-lg sticky-top">
+  <nav class="navbar navbar-expand-lg sticky-top" *ngIf="currentComponent != ''">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Navbar</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -58,8 +58,8 @@
           (click)="offcanvas.dismiss('Cross click')">Quản lý chi nhánh</button>
         <button type="button" class="list-group-item list-group-item-action" routerLink="nha-cung-cap"
           (click)="offcanvas.dismiss('Cross click')">Quản lý nhà cung cấp</button>
-        <button type="button" class="list-group-item list-group-item-action" routerLink="chi-tieu"
-          (click)="offcanvas.dismiss('Cross click')">Quản lý chi tiêu</button>
+        <!-- <button type="button" class="list-group-item list-group-item-action" routerLink="chi-tieu"
+          (click)="offcanvas.dismiss('Cross click')">Quản lý chi tiêu</button> -->
       </div>
       <!-- <div class="text-end">
             <button type="button" class="btn btn-outline-dark" (click)="offcanvas.close('Save click')">Save</button>

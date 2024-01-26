@@ -26,10 +26,10 @@
                 <td *ngIf="c.gioiTinh===false">{{gioitinhNu}}</td>
                 <td>{{c.diaChi}}</td>
                 <td>{{c.ngaySinh | date: 'dd/MM/yyyy'}}</td>
-                <td>{{c.soDiemTichLuy}}</td>
-                <td>{{c.soDiemDaSuDung}}</td>
-                <td>{{c.soTienDaTichLuy}}</td>
-                <td>{{c.soTienDaSuDung}}</td>
+                <td>{{c.soDiemTichLuy|number:'1.0-0'}}</td>
+                <td>{{c.soDiemDaSuDung|number:'1.0-0'}}</td>
+                <td>{{c.soTienDaTichLuy|number:'1.0-0'}}.VNĐ</td>
+                <td>{{c.soTienDaSuDung|number:'1.0-0'}}.VNĐ</td>
                 <td>{{c.ghiChu}}</td>
                 <td><i class="fa-solid fa-trash-can" (click)="Delete(c.idtheThanhVien)"></i></td>
             </tr>
@@ -71,8 +71,8 @@
                 <div class="col-md-6">
                     <label for="gioiTinh" class="form-label">Giới tính</label>
                     <select title="Giới tính" [(ngModel)]="GenderSelected" name="exampleSelect" class="form-control">
-                        <option [value]="true">Nam</option>
-                        <option [value]="false">Nữ</option>
+                        <option [ngValue]="true">Nam</option>
+                        <option [ngValue]="false">Nữ</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -81,8 +81,8 @@
                         [(ngModel)]="service.dataKhachHang.diaChi">
                 </div>
                 <div class="md-6 input-container">
-                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
-                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="NgaySinh"  />
+                    <label for="NgaySinhFormat" class="form-label">Ngày sinh</label>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)] = "NgaySinh"  required="true"/>
                     <!-- <span><i class="fa-solid fa-calendar-days" (click)="ngaySinh.toggle()"></i></span> -->
                 </div>
                 <div class="col-md-6">
@@ -179,8 +179,8 @@
                 <div class="col-md-6">
                     <label for="gioiTinh" class="form-label">Giới tính</label>
                     <select title="Giới tính" [(ngModel)]="GenderSelected" name="gioiTinh" class="form-control">
-                        <option [value]="true">Nam</option>
-                        <option [value]="false">Nữ</option>
+                        <option [ngValue]="true">Nam</option>
+                        <option [ngValue]="false">Nữ</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -190,7 +190,7 @@
                 </div>
                 <div class="md-6 input-container">
                     <label for="ngaySinh" class="form-label">Ngày sinh</label>
-                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="ngaySinh" [(ngModel)] = "NgaySinh"  required="true"/>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="NgaySinhFormat" [(ngModel)] = "NgaySinhFormat"  required="true"/>
                 </div>
 
                 <div class="col-md-6">

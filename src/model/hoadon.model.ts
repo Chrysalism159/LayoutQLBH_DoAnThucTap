@@ -2,7 +2,7 @@ export class ChiTietHoaDon{
     idchiTietHoaDon: string =""
     idhoaDon: string =""
     idsanPham: string =""
-    chietKhau: number = 0
+    chietKhau: number = 0.00
     soLuong: number = 0
     dongia: number = 0
     thanhTien: number = 0

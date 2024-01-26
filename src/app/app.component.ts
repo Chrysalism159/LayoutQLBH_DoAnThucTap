@@ -46,6 +46,7 @@ export class AppComponent implements OnDestroy {
 	logout()
 	{
 		this.router.navigate(['']);
+		localStorage.setItem('loginToken','')
 	}
 
 

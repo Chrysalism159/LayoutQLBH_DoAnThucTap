@@ -8,7 +8,7 @@ import { ChiTietHoaDon, GioHang } from '../../model/hoadon.model';
 @Component({
   selector: 'app-trangchu',
   templateUrl: './trangchu.component.html',
-  styles: ``
+  styleUrls: ['./trangchu.component.css']
 })
 export class TrangchuComponent implements OnInit{
   constructor(public service:SanPhamService, private modalService: NgbModal, public master: MasterService)

@@ -11,3 +11,8 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     
 }
+@page {
+    size: A4;
+    margin: 10mm;
+  }
+  

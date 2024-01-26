@@ -21,3 +21,10 @@ export class LoaiThe{
         ghiChu: string = ""
     
 }
+export class Diem{
+    soDiemTichLuy: number = 0
+    soDiemDaSuDung: number = 0
+    soTienDaTichLuy: number = 0
+    soTienDaSuDung: number = 0
+    ghiChu: string = ""
+}

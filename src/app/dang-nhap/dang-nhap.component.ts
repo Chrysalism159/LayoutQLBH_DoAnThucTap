@@ -25,46 +25,11 @@ export class DangNhapComponent {
         alert("Login Successfull")
         localStorage.setItem("loginToken", res.thongBao)
         console.log("localStorage:",localStorage.getItem("loginToken"))
-        this.role = this.service.getRoles()
-        console.log(this.role)
+       
         this.router.navigateByUrl('trang-chu')
         
       }
     })
-    // this.service.dangnhap()
-    // .subscribe(
-    //   response => {
-    //     // Successfully logged in
-    //     console.log(response.access_token);
-
-    //     // Save token to local storage
-    //     // localStorage.setItem('access_token', response.access_token);
-
-    //     // Redirect or perform other actions as needed
-    //     // Example: Redirect to the home page
-    //     this.router.navigate(['/home']);
-    //   },
-    //   error => {
-    //     // Handle errors, show error messages, etc.
-    //     console.error('Login failed', error);
-    //   }
-    // );
-    // this.service.timtaikhoantheoten()
-    // .subscribe({
-    //   next: res => {
-    //     this.result=res as DangNhap
-    //     if(this.result.matKhau === this.service.taikhoan.matKhau)
-    //     {
-    //       sessionStorage.setItem('username',this.result.tenNguoiDung);
-    //         sessionStorage.setItem('role',this.result.phanQuyen);
-    //         this.router.navigate(['trang-chu']);
-    //         this.service.isLogIn = true
-    //         console.log(sessionStorage)
-    //     }
-    //   },
-    //   error: err => {
-    //     console.log('Login failed:', err);
-    // }})
   }
   
   

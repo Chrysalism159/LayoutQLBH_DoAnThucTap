@@ -5,7 +5,7 @@ import { DangKiTaiKhoanComponent } from './dang-ki-tai-khoan/dang-ki-tai-khoan.c
 import { TrangchuComponent } from './trangchu/trangchu.component';
 import { DanhSachNguoiDungComponent } from './danh-sach-nguoi-dung/danh-sach-nguoi-dung.component';
 import { DanhSachSanPhamComponent } from './danh-sach-san-pham/danh-sach-san-pham.component';
-import { XacThucGuard } from './guard/xac-thuc.guard';
+// import { XacThucGuard } from './guard/xac-thuc.guard';
 import { DanhSachNhanVienComponent } from './danh-sach-nhan-vien/danh-sach-nhan-vien.component';
 import { ChiTietHoaDonComponent } from './trangchu/chi-tiet-hoa-don/chi-tiet-hoa-don.component';
 import { QuanLyChiNhanhComponent } from './quan-ly-chi-nhanh/quan-ly-chi-nhanh.component';
@@ -21,12 +21,12 @@ const routes: Routes = [
   {component:TrangchuComponent,path:'trang-chu'},
   {component:DanhSachNguoiDungComponent,path:'tai-khoan-khach-hang'},
   {component:DanhSachSanPhamComponent,path:'san-pham'},
-  {component:DanhSachNhanVienComponent,path:'nhan-vien',canActivate:[XacThucGuard]},
+  {component:DanhSachNhanVienComponent,path:'nhan-vien'},
   {component:ChiTietHoaDonComponent,path:'chi-tiet-hoa-don'},
-  {component:QuanLyChiNhanhComponent,path:'chi-nhanh',canActivate:[XacThucGuard]},
-  {component:QuanLyNhaCungCapComponent,path:'nha-cung-cap',canActivate:[XacThucGuard]},
+  {component:QuanLyChiNhanhComponent,path:'chi-nhanh'},
+  {component:QuanLyNhaCungCapComponent,path:'nha-cung-cap'},
   {component:QuanLyChiTieuComponent,path:'chi-tieu'},
-  {component:QuanLyHoaDonComponent,path:'hoa-don',canActivate:[XacThucGuard]},
+  {component:QuanLyHoaDonComponent,path:'hoa-don'},
  ];
 
 @NgModule({
@@ -34,3 +34,6 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
+
+//,canActivate:[XacThucGuard]

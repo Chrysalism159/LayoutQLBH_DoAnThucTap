@@ -1,3 +1,253 @@
 <div class="container">
-    
+    <h3 class="text-lg-center">Danh sách khách hàng</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>Tên khách hàng</td>
+                <td>Số điện thoại</td>
+                <td>Email</td>
+                <td>Giới tính</td>
+                <td>Địa chỉ</td>
+                <td>Ngày sinh</td>
+                <td>Điểm tích lũy</td>
+                <td>Điểm dùng</td>
+                <td>Tiền tích lũy</td>
+                <td>Tiền sử dụng</td>
+                <td>Ghi chú</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of service.dskh" (click)="UpdateModal(c.idtheThanhVien)">
+                <td>{{c.tenKhachHang}}</td>
+                <td>{{c.sdt}}</td>
+                <td>{{c.email}}</td>
+                <td *ngIf="c.gioiTinh===true">{{gioitinhNam}}</td>
+                <td *ngIf="c.gioiTinh===false">{{gioitinhNu}}</td>
+                <td>{{c.diaChi}}</td>
+                <td>{{c.ngaySinh | date: 'dd/MM/yyyy'}}</td>
+                <td>{{c.soDiemTichLuy|number:'1.0-0'}}</td>
+                <td>{{c.soDiemDaSuDung|number:'1.0-0'}}</td>
+                <td>{{c.soTienDaTichLuy|number:'1.0-0'}}VNĐ</td>
+                <td>{{c.soTienDaSuDung|number:'1.0-0'}}VNĐ</td>
+                <td>{{c.ghiChu}}</td>
+                <td><i class="fa-solid fa-trash-can" (click)="Delete(c.idtheThanhVien)"></i></td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Tạo thẻ khách hàng mới</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form class="row g-3" #form="ngForm" (submit)="onSubmit(form)" novalidate >
+                <div class="md-6">
+                    <label for="idtheThanhVien" class="form-label">Mã thẻ thành viên</label>
+                    <input class="form-control" name="idsanPham" id="idtheThanhVien" #idtheThanhVien="ngModel"
+                        [(ngModel)]="guidId" (click)="generateGuid()">
+                </div>
+                <div class="md-6">
+                    <label for="idloaiThe" class="form-label">Tên loại thẻ</label>
+                    <select title="Chọn loại thẻ" [(ngModel)]="selectedValue" name="exampleSelect" class="form-control">
+                        <option *ngFor="let c of service.loaiTheList" [value]="c.idloaiThe">{{ c.tenLoaiThe }}</option>
+                    </select>
+                </div>
+                <div class="md-6">
+                    <label for="tenKhachHang" class="form-label">Tên khách hàng</label>
+                    <input class="form-control" name="tenKhachHang" id="tenKhachHang" #tenKhachHang="ngModel"
+                        [(ngModel)]="service.dataKhachHang.tenKhachHang">
+                </div>
+                <div class="col-md-6">
+                    <label for="sdt" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" name="sdt" id="sdt" #sdt="ngModel"
+                        [(ngModel)]="service.dataKhachHang.sdt">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" #email="ngModel"
+                        [(ngModel)]="service.dataKhachHang.email">
+                </div>
+                <div class="col-md-6">
+                    <label for="gioiTinh" class="form-label">Giới tính</label>
+                    <select title="Giới tính" [(ngModel)]="GenderSelected" name="exampleSelect" class="form-control">
+                        <option [value]="true">Nam</option>
+                        <option [value]="false">Nữ</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="gioiTinh" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="gioiTinh" id="gioiTinh" #gioiTinh="ngModel"
+                        [(ngModel)]="service.dataKhachHang.diaChi">
+                </div>
+                <div class="md-6 input-container">
+                    <label for="NgaySinhFormat" class="form-label">Ngày sinh</label>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="NgaySinh" [(ngModel)] = "NgaySinh"  required="true"/>
+                    <!-- <span><i class="fa-solid fa-calendar-days" (click)="ngaySinh.toggle()"></i></span> -->
+                </div>
+                <div class="col-md-6">
+                    <label for="soDiemTichLuy" class="form-label">Số điểm tích lũy</label>
+                    <input type="text" class="form-control" name="soDiemTichLuy" id="soDiemTichLuy"
+                        #soDiemTichLuy="ngModel" [(ngModel)]="service.dataKhachHang.soDiemTichLuy">
+                </div>
+                <div class="col-md-6">
+                    <label for="soDiemDaSuDung" class="form-label">Số điểm đã dùng</label>
+                    <input type="text" class="form-control" name="soDiemDaSuDung" id="soDiemDaSuDung"
+                        #soDiemDaSuDung="ngModel" [(ngModel)]="service.dataKhachHang.soDiemDaSuDung">
+                </div>
+                <div class="col-md-6">
+                    <label for="soTienDaTichLuy" class="form-label">Số tiền tích lũy</label>
+                    <input type="text" class="form-control" name="soTienDaTichLuy" id="soTienDaTichLuy"
+                        #soTienDaTichLuy="ngModel" [(ngModel)]="service.dataKhachHang.soTienDaTichLuy">
+                </div>
+                <div class="col-md-6">
+                    <label for="soTienDaSuDung" class="form-label">Số tiền đã dùng</label>
+                    <input type="text" class="form-control" name="soTienDaSuDung" id="soTienDaSuDung"
+                        #soTienDaSuDung="ngModel" [(ngModel)]="service.dataKhachHang.soTienDaSuDung">
+                </div>
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu" #ghiChu="ngModel"
+                        [(ngModel)]="service.dataKhachHang.ghiChu">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark"
+                        (click)="modal.dismiss('Cross click')">Save</button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <button class="btn btn-outline-dark" (click)="open(content)">Thêm thẻ khách hàng</button>
+
+    <hr />
+
+    <ng-template #del_content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title " id="modal-basic-title">Xóa thông tin khách hàng</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <form #formdelete="ngForm" (submit)="Del()">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="dateOfBirth">Bạn muốn xóa thông tin khách hàng này?</label>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" ngbAutofocus class="btn btn-danger" (click)="modal.dismiss('Cross click')">Xóa</button>
+            </div>
+        </form>   
+    </ng-template>
+
+    <!-- Cập nhật thông tin thẻ khách hàng -->
+
+    <ng-template #updatemodal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Cập nhật thông tin thẻ khách hàng</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <form class="row g-3" #formUpdate="ngForm" (submit)="onUpdate(formUpdate)" novalidate autocomplete="off">
+                <div class="md-6">
+                    <label for="idtheThanhVien" class="form-label">Mã thẻ thành viên</label>
+                    <input class="form-control" name="idsanPham" id="idtheThanhVien" #idtheThanhVien="ngModel"
+                        [(ngModel)]="khachhang.idtheThanhVien" readonly>
+                </div>
+                <div class="md-6">
+                    <label for="idloaiThe" class="form-label">Tên loại thẻ</label>
+                    <select title="Chọn loại thẻ" [(ngModel)]="khachhang.idloaiThe" name="exampleSelect" class="form-control">
+                        <option *ngFor="let c of service.loaiTheList" [value]="c.idloaiThe">{{ c.tenLoaiThe }}</option>
+                    </select>
+                </div>
+                <div class="md-6">
+                    <label for="tenKhachHang" class="form-label">Tên khách hàng</label>
+                    <input class="form-control" name="tenKhachHang" id="tenKhachHang" #tenKhachHang="ngModel"
+                        [(ngModel)]="khachhang.tenKhachHang">
+                </div>
+                <div class="col-md-6">
+                    <label for="sdt" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" name="sdt" id="sdt" #sdt="ngModel"
+                        [(ngModel)]="khachhang.sdt">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" #email="ngModel"
+                        [(ngModel)]="khachhang.email">
+                </div>
+                <div class="col-md-6">
+                    <label for="gioiTinh" class="form-label">Giới tính</label>
+                    <select title="Giới tính" [(ngModel)]="GenderSelected" name="gioiTinh" class="form-control">
+                        <option [value]="true">Nam</option>
+                        <option [value]="false">Nữ</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="diaChi" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" name="diaChi" id="diaChi" #diaChi="ngModel"
+                        [(ngModel)]="khachhang.diaChi">
+                </div>
+                <div class="md-6 input-container">
+                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                    <input type="date" class="form-control" placeholder="yyyy-mm-dd" name="NgaySinhFormat" [(ngModel)] = "NgaySinhFormat"  required="true"/>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="soDiemTichLuy" class="form-label">Số điểm tích lũy</label>
+                    <input type="text" class="form-control" name="soDiemTichLuy" id="soDiemTichLuy"
+                        #soDiemTichLuy="ngModel" [(ngModel)]="khachhang.soDiemTichLuy">
+                </div>
+                <div class="col-md-6">
+                    <label for="soDiemDaSuDung" class="form-label">Số điểm đã dùng</label>
+                    <input type="text" class="form-control" name="soDiemDaSuDung" id="soDiemDaSuDung"
+                        #soDiemDaSuDung="ngModel" [(ngModel)]="khachhang.soDiemDaSuDung">
+                </div>
+                <div class="col-md-6">
+                    <label for="soTienDaTichLuy" class="form-label">Số tiền tích lũy</label>
+                    <input type="text" class="form-control" name="soTienDaTichLuy" id="soTienDaTichLuy"
+                        #soTienDaTichLuy="ngModel" [(ngModel)]="khachhang.soTienDaTichLuy">
+                </div>
+                <div class="col-md-6">
+                    <label for="soTienDaSuDung" class="form-label">Số tiền đã dùng</label>
+                    <input type="text" class="form-control" name="soTienDaSuDung" id="soTienDaSuDung"
+                        #soTienDaSuDung="ngModel" [(ngModel)]="khachhang.soTienDaSuDung">
+                </div>
+                <div class="md-6">
+                    <label for="ghiChu" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" name="ghiChu" id="ghiChu" #ghiChu="ngModel"
+                        [(ngModel)]="khachhang.ghiChu">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark"
+                        (click)="modal.dismiss('Cross click')">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
 </div>
+
+<style>
+    .input-container {
+        position: relative;
+        /* Đặt container là relative để định vị icon tương đối so với nó */
+    }
+
+    .input-container .form-control {
+        padding-right: 30px;
+        /* Tạo không gian cho icon */
+    }
+
+    .input-container i {
+        position: absolute;
+        /* Đặt icon là absolute để nó có thể định vị tương đối so với container */
+        right: 30px;
+        /* Định vị icon gần cạnh phải của input */
+        top: 50%;
+        /* Định vị ở giữa chiều cao của input */
+        transform: translateY(-50%);
+        /* Điều chỉnh chính xác vị trí theo chiều dọc */
+        cursor: pointer;
+        /* Thêm style cursor nếu icon có tương tác */
+    }
+</style>

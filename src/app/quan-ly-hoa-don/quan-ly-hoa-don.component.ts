@@ -73,19 +73,36 @@ export class QuanLyHoaDonComponent implements OnInit {
     // })
   }
   Delete(code: any) {
-    this.openDel()
+    
     this.guidId = code
+    this.service.timDSCTHDtheoHD(code)
+    .subscribe({
+      next: res=>{
+        this.CTHD = res as ChiTietHoaDon[]
+        console.log(this.CTHD)
+        for(let i of this.CTHD)
+        {
+          this.service.xoaCThoaDon(i.idchiTietHoaDon)
+          .subscribe((res:any)=>
+          {
+            console.log(res)
+          })
+        }
+          
+      }
+    })
+    this.openDel()
   }
   Del() {
-  this.service.xoahoaDon(this.guidId)
-  .subscribe({
-    next: res=>{
-      this.toastr.success("Xóa thông tin thành công!")
-      this.service.danhsachHoadon()
-      this.modal.dismissAll
-      console.log(res)
-    }
-  })
+    this.service.xoahoaDon(this.guidId)
+    .subscribe((res:any)=>{
+      
+      
+        this.toastr.success(res.thongBao)
+        this.service.danhsachHoadon()
+        this.modalService.dismissAll
+        console.log(res)
+      })
   }
 
 

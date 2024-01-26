@@ -41,8 +41,9 @@ export class DanhSachSanPhamComponent implements OnInit {
   }
   
   onSubmit(form: NgForm) {
-    this.service.formData.idsanPham = this.master.createGuid();
-    this.service.formData.idanh = this.master.createGuid();
+    this.service.formData=this.sanpham
+    this.service.formData.idsanPham = this.guidsp
+    this.service.formData.idanh = this.guidha
     this.service.themSanpham().subscribe({
       next: res=>{
         console.log(res)
@@ -62,6 +63,7 @@ export class DanhSachSanPhamComponent implements OnInit {
       next: res=>{
         console.log(res)
         this.service.danhsachSanpham()
+        this.service.danhsachHinhanh()
         this.toastr.success("Cập nhật sản phẩm thành công!", "")
       },
       error: err=>{

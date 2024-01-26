@@ -1,5 +1,5 @@
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, OnInit, inject, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, inject, TemplateRef, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { ChiTietHoaDon, GioHang, HoaDon } from '../../../model/hoadon.model';
 import { KhachHang } from '../../../model/khachhang.model';
 import { ChiNhanh } from '../../../model/chinhanh.model';
@@ -10,9 +10,14 @@ import { SanPham } from '../../../model/sanpham.model';
 import { SanPhamService } from '../../service/sanpham.service';
 import { NhanVienService } from '../../service/nhanvien.service';
 import { ToastrService } from 'ngx-toastr';
-import printJS from 'print-js';
+import * as pdfMake from 'pdfmake/build/pdfMake'
 import { PhieuNhapHangService } from '../../service/phieunhaphang.service';
+import { KhachHangService } from '../../service/khachhang.service';
+import { format } from 'date-fns';
+import { NgxPrintService, PrintOptions } from 'ngx-print';
 
+
+// (pdfMake as any).vfs = pdfFont.pdfMake.vfs
 @Component({
   selector: 'app-chi-tiet-hoa-don',
   templateUrl: './chi-tiet-hoa-don.component.html',
@@ -21,8 +26,10 @@ import { PhieuNhapHangService } from '../../service/phieunhaphang.service';
 export class ChiTietHoaDonComponent implements OnInit {
 
 
-  constructor(public service: HoaDonService, protected master: MasterService, public sp: SanPhamService, public cn: NhanVienService,
-    private toastr: ToastrService, public pnh: PhieuNhapHangService) {
+  constructor(public service: HoaDonService, protected master: MasterService, public sp: SanPhamService,
+     public cn: NhanVienService,public kh:KhachHangService,
+    private toastr: ToastrService, public pnh: PhieuNhapHangService,
+    private printService: NgxPrintService, private renderer: Renderer2) {
 
   }
   soluong: number = 1;
@@ -37,7 +44,8 @@ export class ChiTietHoaDonComponent implements OnInit {
   dssp: SanPham[] = []
   dshd: ChiTietHoaDon[] = []
   dsgiohang: GioHang[] = []
-  ngaylaphoadon: Date = new Date(1960, 1, 1)
+  ngaylaphoadon: Date = new Date()
+  ngaysinh: Date = new Date(1960,1,1)
   makh: string = ""
   manv: string = ""
   masp: string = ""
@@ -46,7 +54,7 @@ export class ChiTietHoaDonComponent implements OnInit {
   closeResult: string = " "
   isEnable: boolean = true
   isCTHDEnable: boolean = false
-
+  @ViewChild('invoiceContent') invoiceContent!: ElementRef;
   private modalService = inject(NgbModal);
 
   open(content: TemplateRef<any>) {
@@ -83,12 +91,12 @@ export class ChiTietHoaDonComponent implements OnInit {
         })
     }
   }
-  themsanpham(id: any) {
+  tinhTongtienhoadon(id:any)
+  {
     this.tongtien = 0
     this.number =0 
     for (let i = 0; i < this.dsgiohang.length; i++) {
       if (this.dsgiohang[i].idsanPham == id) {
-        this.dsgiohang[i].soLuong++
         this.dsgiohang[i].thanhTien = this.dsgiohang[i].giaBan * this.dsgiohang[i].soLuong
       }
       this.tongtien += this.dsgiohang[i].thanhTien
@@ -96,29 +104,28 @@ export class ChiTietHoaDonComponent implements OnInit {
     }
     this.master.setData(this.number)
   }
-  bosanpham(id: any) {
-    this.tongtien = 0
-    this.number =0 
+  themsanpham(id: any) {
+   
     for (let i = 0; i < this.dsgiohang.length; i++) {
       if (this.dsgiohang[i].idsanPham == id) {
-        this.dsgiohang[i].soLuong--
-        this.dsgiohang[i].thanhTien = this.dsgiohang[i].giaBan * this.dsgiohang[i].soLuong
+        this.dsgiohang[i].soLuong++
       }
-      this.number += this.dsgiohang[i].soLuong 
-      this.tongtien += this.dsgiohang[i].thanhTien      
     }
-    this.master.setData(this.number)
+    this.tinhTongtienhoadon(id)
+  }
+  bosanpham(id: any) {
+    for (let i = 0; i < this.dsgiohang.length; i++) {
+      if (this.dsgiohang[i].idsanPham == id) 
+        this.dsgiohang[i].soLuong--     
+    }
+    this.tinhTongtienhoadon(id)
   }
   Remove(code: any) {
     this.number =0 
     const index = this.dsgiohang.findIndex(item => item.idsanPham === code);
     if (index !== -1) {
       this.dsgiohang.splice(index, 1);
-      for (let i = 0; i < this.dsgiohang.length; i++) {
-        
-        this.number += this.dsgiohang[i].soLuong 
-      }
-      this.master.setData(this.number)
+      this.tinhTongtienhoadon(code)
     }
 
   }
@@ -128,6 +135,8 @@ export class ChiTietHoaDonComponent implements OnInit {
         next: res => {
           this.khachhang = res as KhachHang
           this.makh = this.khachhang.idtheThanhVien
+          this.kh.timtheKHbangID(this.khachhang.idloaiThe)
+          this.chitiethoadon.chietKhau = this.kh.chietkhau
           console.log("Ma khach hang",this.makh)
         }, error: err => {
           console.log(err)
@@ -144,22 +153,16 @@ export class ChiTietHoaDonComponent implements OnInit {
         }
       })
   }
-  MaPNHang(){
-    console.log(this.mapnh)
-  }
   CapNhatChiTietHoaDon()
   {
     // debugger
     for (let i = 0; i < this.dsgiohang.length; i++) {
-      // this.chitiethoadon = new ChiTietHoaDon()
-      console.log(this.mapnh)
       this.chitiethoadon.idchiTietHoaDon = this.master.createGuid()
       this.chitiethoadon.idhoaDon = this.mahd
       this.chitiethoadon.idsanPham = this.dsgiohang[i].idsanPham
       this.chitiethoadon.soLuong = this.dsgiohang[i].soLuong
       this.chitiethoadon.dongia = this.dsgiohang[i].giaBan
       this.chitiethoadon.thanhTien = this.dsgiohang[i].thanhTien
-      console.log(this.chitiethoadon)
       this.service.cthd = this.chitiethoadon
       this.service.themChitietHD()
       .subscribe({
@@ -167,24 +170,24 @@ export class ChiTietHoaDonComponent implements OnInit {
           this.toastr.success("Tạo hóa đơn thành công!")
         }
       })
+      this.sp.timsanphamBangid(this.dsgiohang[i].idsanPham)
+      .subscribe((res:any)=>
+      {
+        this.sp.formData = res
+        this.sp.formData.soLuongHienCo -= this.dsgiohang[i].soLuong
+        this.sp.capnhatSanpham()
+        .subscribe((tt:any)=>{
+          console.log("CapNhatLaiSoLuongSanPham: ", tt.thongbao)
+        })
+      })
     }
   }
+  
   InHoaDon(){
-    if(this.isCTHDEnable == false)
-    {
-      this.toastr.show("Bạn chưa cập nhật thông tin hóa đơn!")
-    }
-    else{
-      if (this.inhoadon && this.inhoadon.nativeElement) {
-        printJS({ printable: this.inhoadon.nativeElement, type: 'html' });
-      } else {
-        console.error('Content to print is not available or not initialized.');
-      }
-    }
+    this.HienThihoadon()
   }
   @ViewChild('inhoadon') inhoadon !: ElementRef
   HienThihoadon() {
-    this.mahd = this.master.createGuid()
     this.modalService.open(this.inhoadon, { ariaLabelledBy: 'modal-basic-title' }).result.then(
       (result) => {
         this.closeResult = `Closed with: ${result}`;
@@ -194,18 +197,46 @@ export class ChiTietHoaDonComponent implements OnInit {
       },
     );
   }
-  CapNhatHoaDon()
-  {
-    for (let i = 0; i < this.dsgiohang.length; i++){
+  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
+  printHiddenDiv() {
+    // Hiển thị temporaryDiv
+    this.hiddenDiv.nativeElement.style.display = 'block';
 
+    // In nội dung của temporaryDiv
+    this.printService.print({
+      data: this.hiddenDiv.nativeElement,
+      style: `
+        /* Thêm các kiểu tùy chỉnh cho việc in ấn ở đây */
+        body { font-size: 12px; }
+        /* ... các kiểu khác */
+      `,
+    } as unknown as PrintOptions);
+
+    // Ẩn lại temporaryDiv sau khi in
+    this.hiddenDiv.nativeElement.style.display = 'none';
+  }
+  CapNhatDiemTichLuyKhachHang()
+  {
+    this.kh.timkhachhangBangid(this.makh)
+    .subscribe((res:any)=>{
+      this.khachhang = res 
+      this.kh.ttdiem.soDiemTichLuy = this.hoadon.soTienKhachTra/1000
+      this.kh.ttdiem.soDiemTichLuy = this.chitiethoadon.chietKhau
+      this.kh.ttdiem.soTienDaTichLuy = (this.hoadon.soTienKhachTra/1000 ) *10
+      this.kh.capnhatdiemtichluy(this.makh)
+      .subscribe((res:any)=>{
+        console.log("CapNhatLaiDiemKhachHang",res.thongBao)
+      })
     }
+    )
+    
   }
   TaoHoaDon() {
-    this.LayMaKH()
     this.hoadon.idhoaDon = this.mahd
     this.hoadon.idtheThanhVien = this.makh
-    this.hoadon.ngayLapHoaDon = this.ngaylaphoadon.toLocaleString()
-    this.hoadon.tongTienSauChietKhau = this.tongtien
+    this.ngaylaphoadon = new Date()
+    this.hoadon.ngayLapHoaDon = this.NgayLapHoaDonFormat
+    this.hoadon.tongTienSauChietKhau = this.tongtien *(1-  this.chitiethoadon.chietKhau)
     this.hoadon.soTienKhachTra = this.tongtien
     if (this.hoadon.soTienKhachTra < this.tongtien) {
       this.toastr.error("Số tiền khách trả không đủ!")
@@ -218,13 +249,25 @@ export class ChiTietHoaDonComponent implements OnInit {
             this.CapNhatChiTietHoaDon()
             this.toastr.success("Tạo hóa đơn thành công!")
             this.isCTHDEnable = true
+            
+            this.modalService.dismissAll()
           }
         })
+      this.CapNhatDiemTichLuyKhachHang()
     }
     console.log(this.hoadon)
-
-
   }
+
+  get NgayLapHoaDonFormat(): string {
+    // Chuyển đổi NgaySinh thành chuỗi định dạng 'yyyy-MM-dd'
+    return format(this.ngaylaphoadon, 'yyyy-MM-dd');
+  }
+
+  set NgayLapHoaDonFormat(value: string) {
+    // Chuyển đổi chuỗi thành đối tượng Date
+    this.ngaylaphoadon = new Date(value);
+  }
+
   private getDismissReason(reason: any): string {
     switch (reason) {
       case ModalDismissReasons.ESC:

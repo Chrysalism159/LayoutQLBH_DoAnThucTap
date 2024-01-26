@@ -23,7 +23,7 @@ export class SanPhamService {
 
  
   danhsachSanpham(){
-    debugger
+    
     this.http.get(this.urlSanPham + '/danhsach').subscribe({
       next: res=>{
         console.log(res)
